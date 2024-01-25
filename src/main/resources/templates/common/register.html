@@ -26,39 +26,50 @@
     button[type="submit"] {
       margin-top: 10px;
     }
+
+    .padding {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <p class="title is-4 animate__animated animate__fadeInUp">Mini Dooray!</p>
-  <p class="title is-2 animate__animated animate__fadeInUp">회원 가입</p>
+<div class="container animate__animated animate__fadeInUp" >
+  <p class="title is-4 ">Mini Dooray!</p>
+  <p class="title is-2">회원 가입</p>
+
+
+  <!-- error handling -->
+  <div th:if="${error}" class="alert alert-danger padding" role="alert">
+    <span th:text="${error}"></span>
+  </div>
 
   <form method="post" action="/register">
     <div class="field">
       <label class="label" for="id">ID</label>
       <div class="control">
-        <input class="input" type="text" id="id" name="id" placeholder="Enter your ID">
+        <input class="input" type="text" id="id" name="id" placeholder="Enter your ID" required>
       </div>
     </div>
 
     <div class="field">
       <label class="label" for="password">Password</label>
       <div class="control">
-        <input class="input" type="password" id="password" name="password" placeholder="Enter your password">
+        <input class="input" type="password" id="password" name="password" placeholder="Enter your password" required>
       </div>
     </div>
 
     <div class="field">
       <label class="label" for="name">Name</label>
       <div class="control">
-        <input class="input" type="text" id="name" name="name" placeholder="Enter your name">
+        <input class="input" type="text" id="name" name="name" placeholder="Enter your name" required>
       </div>
     </div>
 
     <div class="field">
       <label class="label" for="email">Email</label>
       <div class="control">
-        <input class="input" type="email" id="email" name="email" placeholder="Enter your email">
+        <input class="input" type="email" id="email" name="email" placeholder="Enter your email" required>
       </div>
     </div>
 

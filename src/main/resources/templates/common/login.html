@@ -27,23 +27,34 @@
     button[type="submit"] {
       margin-top: 10px;
     }
+
+    .padding {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
   </style>
 </head>
 <body>
 <div class="login-form animate__animated animate__fadeInUp">
   <h1 class="display-3">Mini-Dooray!</h1>
-  <h2 class="display-4">Login</h2>
+  <h2 class="display-4" style="padding-bottom: 10px">Login</h2>
+
+  <!-- error handling -->
+  <div th:if="${error}" class="alert alert-danger padding" role="alert">
+    <span th:text="${error}"></span>
+  </div>
+
   <form method="post" action="/login">
     <div class="field">
       <label class="label" for="id">ID</label>
       <div class="control">
-        <input class="input" type="text" id="id" name="id" placeholder="Enter your ID">
+        <input class="input" type="text" id="id" name="id" placeholder="Enter your ID" required>
       </div>
     </div>
     <div class="field">
       <label class="label" for="password">Password</label>
       <div class="control">
-        <input class="input" type="password" id="password" name="password" placeholder="Enter your password">
+        <input class="input" type="password" id="password" name="password" placeholder="Enter your password" required>
       </div>
     </div>
     <div class="field">
@@ -61,6 +72,6 @@
   </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/vue@2"></script> <!-- Bulma CSS 프레임워크가 Vue.js를 사용하므로 Vue.js 스크립트를 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 </body>
 </html>
