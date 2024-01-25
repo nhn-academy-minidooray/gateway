@@ -39,7 +39,7 @@ public class AccountLoginController {
       HttpSession session = request.getSession(true);
       session.setAttribute("ACCOUNT_ID", accountId);
       log.debug("doLogin(): login success, id -> ", session.getAttribute("ACCOUNT_ID"));
-      return "project/home";
+      return "redirect:/project/home";
     }
 
     log.debug("doLogin(): login failed");

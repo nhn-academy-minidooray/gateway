@@ -1,14 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Page</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding-top: 56px; /* Fixed navbar height */
+    }
+
+    .navbar {
+      background-color: #343a40;
+    }
+
+    .navbar-brand, .navbar-nav a {
+      color: #ffffff;
+    }
+  </style>
 </head>
-<body>
-<h1>this is mypage</h1>
-<p>Account id: <span th:text="${ACCOUNT_INFO.id}"></span></p>
-<p>Name: <span th:text="${ACCOUNT_INFO.name}"></span></p>
-<p>Email: <span th:text="${ACCOUNT_INFO.email}"></span></p>
-<p>Status: <span th:text="${ACCOUNT_INFO.status}"></span></p>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <a class="navbar-brand" href="#">Mini-Dooray!</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="#">Home</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/mypage">My Page</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container-fluid mt-4">
+  <div class="card">
+    <div class="card-body">
+      <h1 class="card-title text-primary">내 정보</h1>
+
+      <div class="row">
+        <div class="col-md-6">
+          <p class="lead">Account ID: <span th:text="${ACCOUNT_INFO.id}"></span></p>
+          <p class="lead">Name: <span th:text="${ACCOUNT_INFO.name}"></span></p>
+          <p class="lead">Email: <span th:text="${ACCOUNT_INFO.email}"></span></p>
+          <p class="lead">Status: <span th:text="${ACCOUNT_INFO.status}"></span></p>
+
+          <!-- 홈으로 돌아가는 버튼 -->
+          <a href="/project/home" class="btn btn-primary">홈으로 돌아가기</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>

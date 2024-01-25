@@ -2,28 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Register Page</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+    }
+
+    form {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      animation: fadeInUp 1s;
+    }
+
+    button[type="submit"] {
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-this is register page
-<form method="post" action="/register">
-<p>
-  <lable for="id">id</lable>
-  <input type="text" id="id" name="id">
-</p>
-<p>
-  <lable for="password">pw</lable>
-  <input type="password" id="password" name="password">
-</p>
-<p>
-  <lable for="name">name</lable>
-  <input type="text" id="name" name="name">
-</p>
-<p>
-  <lable for="email">email</lable>
-  <input type="email" id="email" name="email">
-</p>
-  <button type="submit">회원가입</button>
-</form>
+<div class="container">
+  <p class="title is-4 animate__animated animate__fadeInUp">Mini Dooray!</p>
+  <p class="title is-2 animate__animated animate__fadeInUp">회원 가입</p>
+
+  <form method="post" action="/register">
+    <div class="field">
+      <label class="label" for="id">ID</label>
+      <div class="control">
+        <input class="input" type="text" id="id" name="id" placeholder="Enter your ID">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label" for="password">Password</label>
+      <div class="control">
+        <input class="input" type="password" id="password" name="password" placeholder="Enter your password">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label" for="name">Name</label>
+      <div class="control">
+        <input class="input" type="text" id="name" name="name" placeholder="Enter your name">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label" for="email">Email</label>
+      <div class="control">
+        <input class="input" type="email" id="email" name="email" placeholder="Enter your email">
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <button class="button is-success" type="submit">회원가입</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 </body>
 </html>
