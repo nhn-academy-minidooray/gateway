@@ -1,0 +1,6 @@
+GET http://172.24.111.71:8080/account/info
+Content-Type: application/json
+
+{
+  "id": "jinwoo"
+}
