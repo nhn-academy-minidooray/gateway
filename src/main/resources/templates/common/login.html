@@ -28,19 +28,18 @@
       margin-top: 10px;
     }
 
-    .padding {
-      padding-top: 10px;
+    .padding-btm {
       padding-bottom: 10px;
     }
   </style>
 </head>
 <body>
 <div class="login-form animate__animated animate__fadeInUp">
-  <h1 class="display-3">Mini-Dooray!</h1>
-  <h2 class="display-4" style="padding-bottom: 10px">Login</h2>
+  <h1 class="display-4">Mini-Dooray!</h1>
+  <h2 class="display-3 padding-btm">Login</h2>
 
   <!-- error handling -->
-  <div th:if="${error}" class="alert alert-danger padding" role="alert">
+  <div th:if="${error}" class="alert alert-danger padding-btm" role="alert">
     <span th:text="${error}"></span>
   </div>
 
