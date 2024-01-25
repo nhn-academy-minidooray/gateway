@@ -11,13 +11,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
 @RequestMapping("/register")
 @RequiredArgsConstructor
 public class AccountRegisterController {
-  private AccountClientService accountClientService;
+  private final AccountClientService accountClientService;
 
   @GetMapping
   public String getRegisterPage() {
@@ -25,10 +26,15 @@ public class AccountRegisterController {
   }
 
   @PostMapping
-  public String doRegister(@Valid AccountRegisterRequestDTO accountRegisterRequestDTO, BindingResult bindingResult) {
-    if(bindingResult.hasErrors())
-      throw new ValidationException();
+  public String doRegister(@Valid AccountRegisterRequestDTO accountRegisterRequestDTO, BindingResult bindingResult
+      , RedirectAttributes redirectAttributes) {
+    if(bindingResult.hasErrors()) {
+      redirectAttributes.addFlashAttribute("error", "id or password validation error");
+      return "redirect:/register";
+    }
     //todo exception handling
+    log.debug("doRegister(): id -> {}, pw -> {}, name -> {}, email -> {}", accountRegisterRequestDTO.getId()
+    ,accountRegisterRequestDTO.getPassword(), accountRegisterRequestDTO.getName(), accountRegisterRequestDTO.getEmail());
 
     if(accountClientService.createAccount(accountRegisterRequestDTO)) {
       log.debug("doRegister(): success create");
@@ -36,7 +42,8 @@ public class AccountRegisterController {
     }
 
     //todo do something when register failed
-    return "redirect:/login";
+    redirectAttributes.addFlashAttribute("error", "이미 존재하는 아이디 or 오류");
+    return "redirect:/register";
   }
 
 }
