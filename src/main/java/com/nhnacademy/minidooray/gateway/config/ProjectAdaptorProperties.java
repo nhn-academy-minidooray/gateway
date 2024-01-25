@@ -4,9 +4,9 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "com.nhnacademy.minidooray.account")
+@ConfigurationProperties(prefix = "com.nhnacademy.minidooray.project")
 @Data
-public class AccountAdaptorProperties {
+public class ProjectAdaptorProperties {
   @NotNull
   private String address;
 }

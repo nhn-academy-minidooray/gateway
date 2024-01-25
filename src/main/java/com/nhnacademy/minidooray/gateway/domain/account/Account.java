@@ -1,4 +1,4 @@
-package com.nhnacademy.minidooray.gateway.domain;
+package com.nhnacademy.minidooray.gateway.domain.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account {
-
-
+  private String id;
+  private String email;
+  private String password;
+  private String status;
 }
