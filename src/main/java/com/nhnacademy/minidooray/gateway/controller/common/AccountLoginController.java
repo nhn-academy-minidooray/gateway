@@ -32,7 +32,7 @@ public class AccountLoginController {
   public String doLogin(@Valid @ModelAttribute AccountLoginRequestDTO accountLoginRequestDTO, BindingResult bindingResult
       , HttpServletRequest request, RedirectAttributes redirectAttributes) {
     if(bindingResult.hasErrors()) {
-      redirectAttributes.addFlashAttribute("error", "id or password validation error");
+      redirectAttributes.addFlashAttribute("error", "아이디나 비밀번호가 규칙에 맞지 않습니다! 다시 확인해 주세요!");
       return "redirect:/login";
     }
     // todo exception handling
@@ -48,7 +48,7 @@ public class AccountLoginController {
 
     log.debug("doLogin(): login failed");
     // todo do something when login failed
-    redirectAttributes.addFlashAttribute("error", "Incorrect username or password.");
+    redirectAttributes.addFlashAttribute("error", "잘못된 아이디 혹은 비밀번호를 입력하셨습니다");
     return "redirect:/login";
   }
 }
