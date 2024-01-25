@@ -72,10 +72,10 @@ public class AccountAdaptorImpl implements AccountAdaptor {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-    HttpEntity<AccountInfoRequestDTO> requestEntity = new HttpEntity<>(accountInfoRequestDTO, headers);
+    HttpEntity<String> requestEntity = new HttpEntity<>(headers);
     log.debug("selectAccount: header -> {}, body -> {}", requestEntity.getHeaders(), requestEntity.getBody());
     ResponseEntity<AccountInfoResponseDTO> responseEntity = restTemplate.exchange(
-        accountAdaptorProperties.getAddress() + "/account/info",
+        accountAdaptorProperties.getAddress() + "/account/info/" + accountInfoRequestDTO.getId(),
         HttpMethod.GET,
         requestEntity,
         new ParameterizedTypeReference<>() {
