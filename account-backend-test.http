@@ -2,5 +2,26 @@ GET http://172.24.111.71:8080/account/info
 Content-Type: application/json
 
 {
-  "id": "jinwoo"
+  "id": "test"
+}
+
+###
+
+POST http://172.24.111.71:8080/account/register
+Content-Type: application/json
+
+{
+  "id": "test",
+  "password": "test",
+  "name": "test",
+  "email": "test@test.com"
+}
+
+###
+
+GET http://localhost:9090/account/info
+Content-Type: application/json
+
+{
+
 }
