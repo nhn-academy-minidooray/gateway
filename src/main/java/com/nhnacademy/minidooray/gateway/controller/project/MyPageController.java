@@ -1,4 +1,4 @@
-package com.nhnacademy.minidooray.gateway.controller.account;
+package com.nhnacademy.minidooray.gateway.controller.project;
 
 import com.nhnacademy.minidooray.gateway.domain.account.Account;
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountInfoRequestDTO;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
-@RequestMapping("/mypage")
+@RequestMapping("/project/mypage")
 @RequiredArgsConstructor
 public class MyPageController {
   private final AccountClientService accountClientService;
@@ -21,6 +21,6 @@ public class MyPageController {
   public String getMyPage(@SessionAttribute(name= "ACCOUNT_ID") String accountId, Model model) {
     AccountInfoResponseDTO account = accountClientService.readAccount(new AccountInfoRequestDTO(accountId));
     model.addAttribute("ACCOUNT_INFO", account);
-    return "account/mypage";
+    return "project/mypage";
   }
 }

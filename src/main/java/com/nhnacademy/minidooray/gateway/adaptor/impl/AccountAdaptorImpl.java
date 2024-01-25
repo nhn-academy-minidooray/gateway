@@ -37,13 +37,31 @@ public class AccountAdaptorImpl implements AccountAdaptor {
 
     HttpEntity<AccountRegisterRequestDTO> requestEntity = new HttpEntity<>(
         accountRegisterRequestDTO, headers);
-    ResponseEntity<String> responseEntity = restTemplate.exchange(
-        accountAdaptorProperties.getAddress() + "/account/register",
-        HttpMethod.POST,
-        requestEntity,
-        new ParameterizedTypeReference<>() {
-        }
-    );
+    ResponseEntity<String> responseEntity;
+    try {
+      responseEntity = restTemplate.exchange(
+          accountAdaptorProperties.getAddress() + "/account/register",
+          HttpMethod.POST,
+          requestEntity,
+          new ParameterizedTypeReference<>() {
+          }
+      );
+    } catch (HttpClientErrorException e) {
+      // HttpClientErrorException은 4xx 상태 코드일 때 발생
+      log.debug("Client error: statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+      // 원하는 로직을 수행하거나 예외를 다시 던지거나, 기타 처리 가능
+      // 예를 들어, 특정 상태 코드에 따라 다르게 처리하고자 할 경우
+      if (e.getRawStatusCode() == HttpStatus.NOT_FOUND.value()) {
+        // NOT_FOUND 상태 코드에 대한 특별한 처리
+      }
+      // 원하는 예외를 던지거나, 기타 처리 가능
+      throw e;
+    } catch (HttpServerErrorException e) {
+      // HttpServerErrorException은 5xx 상태 코드일 때 발생
+      log.debug("Server error: statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+      // 원하는 로직을 수행하거나 예외를 다시 던지거나, 기타 처리 가능
+      throw e;
+    }
     log.debug("insertAccount(): statusCode -> {}", responseEntity.getStatusCode());
     return !responseEntity.getStatusCode().isError();
     // todo exception handling
@@ -55,18 +73,28 @@ public class AccountAdaptorImpl implements AccountAdaptor {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-    HttpEntity<AccountLoginRequestDTO> requestEntity = new HttpEntity<>(accountLoginRequestDTO, headers);
-    ResponseEntity<String> responseEntity = restTemplate.exchange(
-        accountAdaptorProperties.getAddress() + "/account/login",
-        HttpMethod.POST,
-        requestEntity,
-        new ParameterizedTypeReference<>() {
-        }
-    );
-
-    log.debug("isExistAccount(): statusCode -> {}", responseEntity.getStatusCode());
+    HttpEntity<AccountLoginRequestDTO> requestEntity;
+    try {
+      requestEntity = new HttpEntity<>(accountLoginRequestDTO, headers);
+      ResponseEntity<String> responseEntity = restTemplate.exchange(
+          accountAdaptorProperties.getAddress() + "/account/login",
+          HttpMethod.POST,
+          requestEntity,
+          new ParameterizedTypeReference<>() {
+          }
+      );
+      if (responseEntity.getStatusCode().value() == HttpStatus.OK.value())
+        return true;
+    } catch (HttpClientErrorException httpClientErrorException) {
+      if (httpClientErrorException.getRawStatusCode() == HttpStatus.UNAUTHORIZED.value()) {
+        return false;
+      }
+      throw httpClientErrorException;
+    }catch (HttpServerErrorException e) {
+      log.debug("Server error: statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+    }
     // todo exception handling
-    return !responseEntity.getStatusCode().isError();
+    return false;
   }
 
   @Override

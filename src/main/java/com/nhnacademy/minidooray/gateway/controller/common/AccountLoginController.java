@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
@@ -28,9 +29,12 @@ public class AccountLoginController {
   }
 
   @PostMapping
-  public String doLogin(@Valid @ModelAttribute AccountLoginRequestDTO accountLoginRequestDTO, BindingResult bindingResult, HttpServletRequest request) {
-    if(bindingResult.hasErrors())
-      throw new ValidationException();
+  public String doLogin(@Valid @ModelAttribute AccountLoginRequestDTO accountLoginRequestDTO, BindingResult bindingResult
+      , HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    if(bindingResult.hasErrors()) {
+      redirectAttributes.addFlashAttribute("error", "id or password validation error");
+      return "redirect:/login";
+    }
     // todo exception handling
 
     if(accountClientService.doLogin(accountLoginRequestDTO)) {
@@ -44,6 +48,7 @@ public class AccountLoginController {
 
     log.debug("doLogin(): login failed");
     // todo do something when login failed
+    redirectAttributes.addFlashAttribute("error", "Incorrect username or password.");
     return "redirect:/login";
   }
 }
