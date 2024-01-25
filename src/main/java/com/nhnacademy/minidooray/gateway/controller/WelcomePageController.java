@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/")
-public class TestController {
+public class WelcomePageController {
   @GetMapping
   public String testPage() {
-    return "test";
+    return "welcome";
   }
 
 }
