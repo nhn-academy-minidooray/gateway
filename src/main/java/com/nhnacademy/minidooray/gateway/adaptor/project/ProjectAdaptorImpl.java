@@ -86,8 +86,10 @@ public class ProjectAdaptorImpl implements ProjectAdaptor {
           }
       );
       log.debug("selectProjectListByAccountId(): [Create Success] statusCode -> {}", responseEntity.getStatusCode().value());
-      if(responseEntity.getStatusCode().value() == HttpStatus.OK.value())
+      if(responseEntity.getStatusCode().value() == HttpStatus.OK.value()) {
+        log.debug("{}", responseEntity.getBody());
         return responseEntity.getBody();
+      }
     } catch (HttpClientErrorException e) {
       log.debug("selectProjectListByAccountId(): [Client Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
       if (e.getRawStatusCode() == HttpStatus.CONFLICT.value()) {
@@ -137,16 +139,4 @@ public class ProjectAdaptorImpl implements ProjectAdaptor {
     }
     return Optional.empty();
   }
-/**
- *
- * String urlTemplate = UriComponentsBuilder.fromHttpUrl(url)
- *         .queryParam("msisdn", "{msisdn}")
- *         .queryParam("email", "{email}")
- *         .queryParam("clientVersion", "{clientVersion}")
- *         .queryParam("clientType", "{clientType}")
- *         .queryParam("issuerName", "{issuerName}")
- *         .queryParam("applicationName", "{applicationName}")
- *         .encode()
- *         .toUriString();
- */
 }

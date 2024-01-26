@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectListInfoResponseDTO {
-  private long projectId;
+  private Long id;
   private String name;
-  private String detail;
-  private String status;
+//  private String detail;
+//  private String status;
 }
