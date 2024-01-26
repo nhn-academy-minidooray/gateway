@@ -7,7 +7,9 @@ import com.nhnacademy.minidooray.gateway.domain.account.request.AccountInfoReque
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountLoginRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountRegisterRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.account.response.AccountInfoResponseDTO;
+import com.nhnacademy.minidooray.gateway.domain.account.response.AccountStatusInfoResponseDTO;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -46,29 +48,23 @@ public class AccountAdaptorImpl implements AccountAdaptor {
           new ParameterizedTypeReference<>() {
           }
       );
+      log.debug("insertAccount(): [Create Success] statusCode -> {}", responseEntity.getStatusCode().value());
+      return responseEntity.getStatusCode().value() == HttpStatus.CREATED.value();
     } catch (HttpClientErrorException e) {
-      // HttpClientErrorException은 4xx 상태 코드일 때 발생
-      log.debug("Client error: statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
-      // 원하는 로직을 수행하거나 예외를 다시 던지거나, 기타 처리 가능
-      // 예를 들어, 특정 상태 코드에 따라 다르게 처리하고자 할 경우
-      if (e.getRawStatusCode() == HttpStatus.NOT_FOUND.value()) {
-        // NOT_FOUND 상태 코드에 대한 특별한 처리
+      log.debug("insertAccount(): [Client Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+      if (e.getRawStatusCode() == HttpStatus.CONFLICT.value()) {
+        log.debug("insertAccount(): status -> conflict (create failed)");
       }
-      // 원하는 예외를 던지거나, 기타 처리 가능
-      throw e;
     } catch (HttpServerErrorException e) {
-      // HttpServerErrorException은 5xx 상태 코드일 때 발생
-      log.debug("Server error: statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
-      // 원하는 로직을 수행하거나 예외를 다시 던지거나, 기타 처리 가능
+      log.debug("insertAccount(): [Server Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
       throw e;
+      // todo 이 부분은 서버 에러라 에러 페이지로 보내는 게 어떨지?
     }
-    log.debug("insertAccount(): statusCode -> {}", responseEntity.getStatusCode());
-    return !responseEntity.getStatusCode().isError();
-    // todo exception handling
+    return false;
   }
 
   @Override
-  public boolean isMatchAccount(AccountLoginRequestDTO accountLoginRequestDTO) {
+  public Optional<AccountStatusInfoResponseDTO> isMatchAccount(AccountLoginRequestDTO accountLoginRequestDTO) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
@@ -76,29 +72,31 @@ public class AccountAdaptorImpl implements AccountAdaptor {
     HttpEntity<AccountLoginRequestDTO> requestEntity;
     try {
       requestEntity = new HttpEntity<>(accountLoginRequestDTO, headers);
-      ResponseEntity<String> responseEntity = restTemplate.exchange(
+      ResponseEntity<AccountStatusInfoResponseDTO> responseEntity = restTemplate.exchange(
           accountAdaptorProperties.getAddress() + "/account/login",
           HttpMethod.POST,
           requestEntity,
           new ParameterizedTypeReference<>() {
           }
       );
-      if (responseEntity.getStatusCode().value() == HttpStatus.OK.value())
-        return true;
-    } catch (HttpClientErrorException httpClientErrorException) {
-      if (httpClientErrorException.getRawStatusCode() == HttpStatus.UNAUTHORIZED.value()) {
-        return false;
+      log.debug("isMatchAccount(): [Create Success] statusCode -> {}", responseEntity.getStatusCode().value());
+      if(responseEntity.getStatusCode().value() == HttpStatus.OK.value())
+        return Optional.ofNullable(responseEntity.getBody());
+    } catch (HttpClientErrorException e) {
+      log.debug("isMatchAccount(): [Client Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+      if (e.getRawStatusCode() == HttpStatus.CONFLICT.value()) {
+        log.debug("isMatchAccount(): status -> conflict (create failed)");
       }
-      throw httpClientErrorException;
-    }catch (HttpServerErrorException e) {
-      log.debug("Server error: statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+    } catch (HttpServerErrorException e) {
+      log.debug("isMatchAccount(): [Server Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+      throw e;
+      // todo 이 부분은 서버 에러라 에러 페이지로 보내는 게 어떨지?
     }
-    // todo exception handling
-    return false;
+    return Optional.empty();
   }
 
   @Override
-  public AccountInfoResponseDTO selectAccount(AccountInfoRequestDTO accountInfoRequestDTO) {
+  public Optional<AccountInfoResponseDTO> selectAccount(AccountInfoRequestDTO accountInfoRequestDTO) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
@@ -114,25 +112,20 @@ public class AccountAdaptorImpl implements AccountAdaptor {
           new ParameterizedTypeReference<>() {
           }
       );
+      log.debug("isMatchAccount(): [Create Success] statusCode -> {}", responseEntity.getStatusCode().value());
+      if(responseEntity.getStatusCode().value() == HttpStatus.OK.value())
+        return Optional.ofNullable(responseEntity.getBody());
     } catch (HttpClientErrorException e) {
-      // HttpClientErrorException은 4xx 상태 코드일 때 발생
-      log.debug("Client error: statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
-      // 원하는 로직을 수행하거나 예외를 다시 던지거나, 기타 처리 가능
-      // 예를 들어, 특정 상태 코드에 따라 다르게 처리하고자 할 경우
-      if (e.getRawStatusCode() == HttpStatus.NOT_FOUND.value()) {
-        // NOT_FOUND 상태 코드에 대한 특별한 처리
+      log.debug("isMatchAccount(): [Client Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+      if (e.getRawStatusCode() == HttpStatus.CONFLICT.value()) {
+        log.debug("isMatchAccount(): status -> conflict (create failed)");
       }
-      // 원하는 예외를 던지거나, 기타 처리 가능
-      throw e;
     } catch (HttpServerErrorException e) {
-      // HttpServerErrorException은 5xx 상태 코드일 때 발생
-      log.debug("Server error: statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
-      // 원하는 로직을 수행하거나 예외를 다시 던지거나, 기타 처리 가능
+      log.debug("isMatchAccount(): [Server Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
       throw e;
-    }    log.debug("selectAccount(): accountId -> {}", accountInfoRequestDTO.getId());
-    log.debug("selectAccount(): statusCode -> {}", responseEntity.getStatusCode());
-
-    return responseEntity.getBody();
+      // todo 이 부분은 서버 에러라 에러 페이지로 보내는 게 어떨지?
+    }
+    return Optional.empty();
   }
 
   @Override
@@ -142,14 +135,27 @@ public class AccountAdaptorImpl implements AccountAdaptor {
     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
     HttpEntity<AccountInfoRequestDTO> requestEntity = new HttpEntity<>(accountInfoRequestDTO, headers);
-    ResponseEntity<String> responseEntity = restTemplate.exchange(
-        accountAdaptorProperties.getAddress() + "/account/delete",
-        HttpMethod.DELETE,
-        requestEntity,
-        new ParameterizedTypeReference<>() {
-        }
-    );
-    return !responseEntity.getStatusCode().isError();
-    // todo exception handling
+    ResponseEntity<String> responseEntity;
+    try {
+      responseEntity= restTemplate.exchange(
+          accountAdaptorProperties.getAddress() + "/account/delete",
+          HttpMethod.DELETE,
+          requestEntity,
+          new ParameterizedTypeReference<>() {
+          }
+      );
+      log.debug("deleteAccount(): [Delete Success] statusCode -> {}", responseEntity.getStatusCode().value());
+      return responseEntity.getStatusCode().value() == HttpStatus.OK.value();
+    } catch (HttpClientErrorException e) {
+      log.debug("deleteAccount(): [Client Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+      if (e.getRawStatusCode() == HttpStatus.CONFLICT.value()) {
+        log.debug("deleteAccount(): status -> conflict (create failed)");
+      }
+    } catch (HttpServerErrorException e) {
+      log.debug("deleteAccount(): [Server Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+      throw e;
+      // todo 이 부분은 서버 에러라 에러 페이지로 보내는 게 어떨지?
+    }
+    return false;
   }
 }
