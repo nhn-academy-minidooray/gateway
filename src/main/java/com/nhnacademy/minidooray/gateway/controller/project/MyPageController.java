@@ -21,8 +21,9 @@ public class MyPageController {
 
   @GetMapping
   public String getMyPage(@SessionAttribute(name= "ACCOUNT_ID") String accountId, Model model) {
-    Optional<AccountInfoResponseDTO> account = accountClientService.readAccount(new AccountInfoRequestDTO(accountId));
-    if(account.isPresent()) {
+    Optional<AccountInfoResponseDTO> accountWrapper = accountClientService.readAccount(new AccountInfoRequestDTO(accountId));
+    if(accountWrapper.isPresent()) {
+      AccountInfoResponseDTO account = accountWrapper.get();
       model.addAttribute("ACCOUNT_INFO", account);
       return "project/mypage";
     }
