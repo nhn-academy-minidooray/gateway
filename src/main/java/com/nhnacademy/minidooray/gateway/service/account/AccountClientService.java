@@ -5,7 +5,9 @@ import com.nhnacademy.minidooray.gateway.domain.account.request.AccountInfoReque
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountLoginRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountRegisterRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.account.response.AccountInfoResponseDTO;
+import com.nhnacademy.minidooray.gateway.domain.account.response.AccountStatusInfoResponseDTO;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class AccountClientService {
   private final AccountAdaptor accountAdaptor;
 
-  public boolean doLogin(AccountLoginRequestDTO accountLoginRequestDTO) {
+  public Optional<AccountStatusInfoResponseDTO> doLogin(AccountLoginRequestDTO accountLoginRequestDTO) {
     return accountAdaptor.isMatchAccount(accountLoginRequestDTO);
   }
 
@@ -22,12 +24,8 @@ public class AccountClientService {
     return accountAdaptor.insertAccount(accountRegisterRequestDTO);
   }
 
-  public AccountInfoResponseDTO readAccount(AccountInfoRequestDTO accountInfoRequestDTO) {
-    AccountInfoResponseDTO account = accountAdaptor.selectAccount(accountInfoRequestDTO);
-    if(Objects.isNull(account))
-      throw new RuntimeException();
-    // todo exception handling
-    return account;
+  public Optional<AccountInfoResponseDTO> readAccount(AccountInfoRequestDTO accountInfoRequestDTO) {
+    return accountAdaptor.selectAccount(accountInfoRequestDTO);
   }
 
   public boolean deleteAccount(AccountInfoRequestDTO accountInfoRequestDTO) {
