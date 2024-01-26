@@ -2,15 +2,13 @@ package com.nhnacademy.minidooray.gateway.controller.common;
 
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountRegisterRequestDTO;
 import com.nhnacademy.minidooray.gateway.service.account.AccountClientService;
+import com.nhnacademy.minidooray.gateway.service.account.impl.AccountClientServiceImpl;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
