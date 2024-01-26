@@ -1,7 +1,9 @@
 package com.nhnacademy.minidooray.gateway.controller.common;
 
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountLoginRequestDTO;
+import com.nhnacademy.minidooray.gateway.domain.account.response.AccountStatusInfoResponseDTO;
 import com.nhnacademy.minidooray.gateway.service.account.AccountClientService;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -31,21 +33,32 @@ public class AccountLoginController {
   @PostMapping
   public String doLogin(@Valid @ModelAttribute AccountLoginRequestDTO accountLoginRequestDTO, BindingResult bindingResult
       , HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    log.debug("doLogin(): Login request with id -> {}, pw -> {}", accountLoginRequestDTO.getId(), accountLoginRequestDTO.getPassword());
     if(bindingResult.hasErrors()) {
       redirectAttributes.addFlashAttribute("error", "아이디나 비밀번호가 규칙에 맞지 않습니다! 다시 확인해 주세요!");
       return "redirect:/login";
     }
-    // todo exception handling
 
-    if(accountClientService.doLogin(accountLoginRequestDTO)) {
-      // todo account exist ? password 비교를 서버쪽에서 하는게 좋을거같다.
-      String accountId = accountLoginRequestDTO.getId();
-      HttpSession session = request.getSession(true);
-      session.setAttribute("ACCOUNT_ID", accountId);
-      log.debug("doLogin(): login success, id -> ", session.getAttribute("ACCOUNT_ID"));
-      return "redirect:/project/home";
+    Optional<AccountStatusInfoResponseDTO> accountInfoWrapped = accountClientService.doLogin(accountLoginRequestDTO);
+    if(accountInfoWrapped.isPresent()) {
+      AccountStatusInfoResponseDTO accountInfo = accountInfoWrapped.get();
+      String accountId = accountInfo.getId();
+      String accountStatus = accountInfo.getStatus();
+      if(accountStatus.equals("가입")) {
+        HttpSession session = request.getSession(true);
+        session.setAttribute("ACCOUNT_ID", accountId);
+        log.debug("doLogin(): login success, id -> ", session.getAttribute("ACCOUNT_ID"));
+        return "redirect:/project/home";
+      } else if(accountStatus.equals("휴면")) {
+        // todo 휴면 유저일 경우
+        redirectAttributes.addFlashAttribute("error", "휴면 상태의 유저는 계정 활성화 작업이 필요합니다");
+        return "redirect:/login";
+      } else if(accountStatus.equals("탈퇴")) {
+        // todo 탈퇴한 유저일 경우
+        redirectAttributes.addFlashAttribute("error", "탈퇴를 진행한 계정은 로그인할 수 없습니다");
+        return "redirect:/login";
+      }
     }
-
     log.debug("doLogin(): login failed");
     // todo do something when login failed
     redirectAttributes.addFlashAttribute("error", "잘못된 아이디 혹은 비밀번호를 입력하셨습니다");
