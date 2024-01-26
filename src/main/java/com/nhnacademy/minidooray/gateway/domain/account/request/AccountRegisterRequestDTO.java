@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @NoArgsConstructor
@@ -13,16 +14,19 @@ import lombok.NoArgsConstructor;
 public class AccountRegisterRequestDTO {
   @NotNull
   @NotBlank
+  @Length(min=4, max = 10)
   private String id;
   @NotNull
   @NotBlank
+  @Length(min = 8, max = 20)
   private String password;
-  @NotNull
-  @NotBlank
-  private String name;
   @NotNull
   @NotBlank
   @Email
   private String email;
+  @NotNull
+  @NotBlank
+  @Length(min = 1, max = 20)
+  private String name;
   // todo validation set
 }
