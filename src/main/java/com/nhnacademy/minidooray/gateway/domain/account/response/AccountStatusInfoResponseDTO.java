@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class AccountStatusInfoResponseDTO {
   private String id;
   private String status;
-
 }
