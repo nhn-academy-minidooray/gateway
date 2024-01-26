@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create Project</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding-top: 56px; /* Fixed navbar height */
+    }
+
+    .navbar {
+      background-color: #343a40;
+    }
+
+    .navbar-brand, .navbar-nav a {
+      color: #ffffff;
+    }
+
+    .container {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <a class="navbar-brand" href="#">Mini-Dooray!</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/project/home">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/project/mypage">My Page</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+  <h1 class="mt-4">프로젝트 생성</h1>
+
+  <form method="post" action="/project/create">
+    <div class="form-group">
+      <label for="projectAdminId">프로젝트 관리자</label>
+      <input type="text" class="form-control" id="projectAdminId" name="projectAdminId" value="test" readonly>
+    </div>
+    <div class="form-group">
+      <label for="projectName">프로젝트 이름</label>
+      <input type="text" class="form-control" id="projectName" name="projectName" required>
+    </div>
+    <div class="form-group">
+      <label for="projectDescription">프로젝트 설명</label>
+      <textarea class="form-control" id="projectDescription" name="projectDescription" rows="4" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">만들기</button>
+    <a href="/project/home" class="btn btn-secondary">취소</a>
+  </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

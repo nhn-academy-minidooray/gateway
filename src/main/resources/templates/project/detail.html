@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Detail</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding-top: 56px; /* Fixed navbar height */
+    }
+
+    .navbar {
+      background-color: #343a40;
+    }
+
+    .navbar-brand, .navbar-nav a {
+      color: #ffffff;
+    }
+
+    .container-fluid {
+      padding: 20px;
+    }
+
+    .task-card {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <a class="navbar-brand" href="#">Mini-Dooray!</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/project/home">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/project/mypage">My Page</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <!-- 프로젝트 정보 -->
+  <h1 class="mt-4">Mini-Dooray! 프로젝트</h1>
+  <div class="mb-4">
+    <!-- Project Member Card -->
+    <div class="card task-card">
+      <div class="card-body">
+        <h5 class="card-title">프로젝트 멤버</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>아이디</th>
+              <th>역할</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>admin</td>
+              <td>관리자</td>
+            </tr>
+            <tr>
+              <td>user</td>
+              <td>멤버</td>
+            </tr>
+            <tr>
+              <td>user2</td>
+              <td>멤버</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- Additional project member information dynamically generated from the project -->
+  </div>
+
+
+
+  <!-- 태스크 목록 -->
+  <h2 class="mt-4">태스크 목록</h2>
+  <div class="row mb-2 ml-1">
+    <div class="mr-2">
+      <button class="btn btn-success" data-toggle="modal" data-target="#createTaskModal">태스크 등록</button>
+    </div>
+    <div class="mr-2"> <!-- 수정: mr-2 클래스 추가 -->
+      <button class="btn btn-primary" data-toggle="modal" data-target="#createTagModal">태그 추가</button>
+    </div>
+    <div> <!-- 수정: mr-2 클래스 추가 -->
+      <button class="btn btn-info" data-toggle="modal" data-target="#createMilestoneModal">마일스톤 추가</button>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <div class="row">
+      <!-- Sample Task Card 1 -->
+      <div class="col-md-6">
+        <div class="card task-card">
+          <div class="card-body">
+            <h3 class="card-title">뷰 개발하기</h3>
+            <p class="card-text">상황에 알맞는 뷰를 개발하는 것</p>
+            <div class="col mb-2">
+              <div class="row mb-2">
+                <button class="btn btn-primary mr-2" disabled>태그 1</button>
+                <button class="btn btn-primary mr-2" disabled>태그 2</button>
+                <button class="btn btn-primary mr-2" disabled>태그 3</button>
+              </div>
+              <div class="row">
+              <button class="btn btn-info" data-toggle="modal" data-target="#createMilestoneModal">마일스톤 1</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sample Task Card 2 -->
+      <div class="col-md-6">
+        <div class="card task-card">
+          <div class="card-body">
+            <h3 class="card-title">컨트롤러 개발하기</h3>
+            <p class="card-text">REST API 적용을 위한 컨트롤러 메서드</p>
+            <div class="col mb-2">
+              <div class="row mb-2">
+                <button class="btn btn-primary mr-2" disabled>태그 1</button>
+                <button class="btn btn-primary mr-2" disabled>태그 2</button>
+              </div>
+              <div class="row">
+                <button class="btn btn-info" data-toggle="modal" data-target="#createMilestoneModal">마일스톤 1</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Repeat the above pattern for additional task cards dynamically based on the actual tasks -->
+    </div>
+  </div>
+
+
+  <!-- 등록 모달 -->
+  <!-- (이전 코드는 그대로 사용) -->
+
+  <!-- 태그 추가 모달 -->
+  <div class="modal fade" id="createTagModal" tabindex="-1" role="dialog" aria-labelledby="createTagModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createTagModalLabel">태그 추가</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- 등록 폼 내용 -->
+          <form method="post" action="/create-tag">
+            <div class="form-group">
+              <label for="tagName">태그 이름</label>
+              <input type="text" class="form-control" id="tagName" name="tagName" required>
+            </div>
+            <button type="submit" class="btn btn-success">등록</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 마일스톤 추가 모달 -->
+  <div class="modal fade" id="createMilestoneModal" tabindex="-1" role="dialog" aria-labelledby="createMilestoneModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createMilestoneModalLabel">마일스톤 추가</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- 등록 폼 내용 -->
+          <form method="post" action="/create-milestone">
+            <div class="form-group">
+              <label for="milestoneName">마일스톤 이름</label>
+              <input type="text" class="form-control" id="milestoneName" name="milestoneName" required>
+            </div>
+            <div class="form-group">
+              <label for="startDate">시작 날짜</label>
+              <input type="date" class="form-control" id="startDate" name="startDate" required>
+            </div>
+            <div class="form-group">
+              <label for="endDate">종료 날짜</label>
+              <input type="date" class="form-control" id="endDate" name="endDate" required>
+            </div>
+            <button type="submit" class="btn btn-success">등록</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 나머지 코드는 그대로 사용 -->
+
+  <!-- 등록 모달 -->
+  <div class="modal fade" id="createTaskModal" tabindex="-1" role="dialog" aria-labelledby="createTaskModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createTaskModalLabel">태스크 등록</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- 등록 폼 내용 -->
+          <form method="post" action="/create-task">
+            <div class="form-group">
+              <label for="taskName">태스크 이름</label>
+              <input type="text" class="form-control" id="taskName" name="taskName" required>
+            </div>
+            <div class="form-group">
+              <label for="taskDescription">태스크 내용</label>
+              <textarea class="form-control" id="taskDescription" name="taskDescription" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="tags">태그</label>
+              <select multiple class="form-control" id="tags" name="tags">
+                <option>태그1</option>
+                <option>태그2</option>
+                <!-- 추가적인 태그 정보는 프로젝트에서 가져와서 동적으로 생성 -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="milestone">마일스톤</label>
+              <select class="form-control" id="milestone" name="milestone">
+                <option>마일스톤1</option>
+                <!-- 추가적인 마일스톤 정보는 프로젝트에서 가져와서 동적으로 생성 -->
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success">등록</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
