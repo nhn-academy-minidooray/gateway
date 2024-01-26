@@ -11,5 +11,4 @@ public class WelcomePageController {
   public String getWelcomePage() {
     return "welcome";
   }
-
 }
