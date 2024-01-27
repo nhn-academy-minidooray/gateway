@@ -51,9 +51,24 @@
   </div>
 </nav>
 
+<!-- error handling -->
+<div th:if="${error}" class="alert alert-danger padding-btm" role="alert">
+  <span th:text="${error}"></span>
+</div>
+
+<!-- info alert -->
+<div th:if="${info}" class="alert alert-success padding-btm" role="alert">
+  <span th:text="${info}"></span>
+</div>
+
 <div class="container-fluid">
   <!-- 프로젝트 정보 -->
-  <h1 class="mt-4" th:text="${projectInfo}">Mini-Dooray! 프로젝트</h1>
+  <h1 class="mt-4" th:text="${projectInfo.name}"></h1>
+  <div class="row mb-2 ml-1">
+    <div class="mr-2">
+      <button class="btn btn-success" data-toggle="modal" data-target="#addMemberModal">멤버 등록</button>
+    </div>
+  </div>
   <div class="mb-4">
     <!-- Project Member Card -->
     <div class="card task-card">
@@ -67,19 +82,17 @@
               <th>역할</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody >
             <tr>
-              <td>admin</td>
+              <td th:text="${projectInfo.adminId}"></td>
               <td>관리자</td>
             </tr>
-            <tr>
-              <td>user</td>
-              <td>멤버</td>
-            </tr>
-            <tr>
-              <td>user2</td>
-              <td>멤버</td>
-            </tr>
+            <div th:if="${memberList}" th:each="member : ${memberList}">
+              <tr th:if="${!#strings.equals(projectInfo.adminId, member.accountId)}">
+                <td th:text="${member.accountId}"></td>
+                <td>멤버</td>
+              </tr>
+            </div>
             </tbody>
           </table>
         </div>
@@ -151,7 +164,35 @@
 
 
   <!-- 등록 모달 -->
-  <!-- (이전 코드는 그대로 사용) -->
+  <!-- 멤버 추가 모달 -->
+  <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModal"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addMemberModalLabel">멤버 추가</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- 등록 폼 내용 -->
+          <form method="post" action="/project/member/add">
+            <div class="form-group">
+              <label for="tagName">프로젝트</label>
+              <input type="text" class="form-control" th:value="${projectInfo.name}" readonly>
+            </div>
+            <input id="projectId" name="projectId" th:value="${projectInfo.id}" hidden>
+            <div class="form-group">
+              <label for="tagName">멤버 이름</label>
+              <input type="text" class="form-control" id="accountId" name="accountId" required>
+            </div>
+            <button type="submit" class="btn btn-success">등록</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- 태그 추가 모달 -->
   <div class="modal fade" id="createTagModal" tabindex="-1" role="dialog" aria-labelledby="createTagModalLabel"
