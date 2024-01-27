@@ -3,7 +3,7 @@ package com.nhnacademy.minidooray.gateway.adaptor.project;
 import com.nhnacademy.minidooray.gateway.config.ProjectAdaptorProperties;
 import com.nhnacademy.minidooray.gateway.domain.project.request.ProjectInfoRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.project.request.ProjectListInfoRequestDTO;
-import com.nhnacademy.minidooray.gateway.domain.project.request.ProjectRegisterRequestDTO;
+import com.nhnacademy.minidooray.gateway.domain.project.request.ProjectCreateRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.project.response.ProjectInfoResponseDTO;
 import com.nhnacademy.minidooray.gateway.domain.project.response.ProjectListInfoResponseDTO;
 import java.util.Collections;
@@ -32,12 +32,12 @@ public class ProjectAdaptorImpl implements ProjectAdaptor {
   private final ProjectAdaptorProperties projectAdaptorProperties;
 
   @Override
-  public boolean insertProject(ProjectRegisterRequestDTO projectRegisterRequestDTO) {
+  public boolean insertProject(ProjectCreateRequestDTO projectCreateRequestDTO) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-    HttpEntity<ProjectRegisterRequestDTO> requestEntity = new HttpEntity<>(projectRegisterRequestDTO, headers);
+    HttpEntity<ProjectCreateRequestDTO> requestEntity = new HttpEntity<>(projectCreateRequestDTO, headers);
     ResponseEntity<String> responseEntity;
     try {
       responseEntity = restTemplate.exchange(

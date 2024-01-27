@@ -3,7 +3,7 @@ package com.nhnacademy.minidooray.gateway.service.project.impl;
 import com.nhnacademy.minidooray.gateway.adaptor.project.ProjectAdaptor;
 import com.nhnacademy.minidooray.gateway.domain.project.request.ProjectInfoRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.project.request.ProjectListInfoRequestDTO;
-import com.nhnacademy.minidooray.gateway.domain.project.request.ProjectRegisterRequestDTO;
+import com.nhnacademy.minidooray.gateway.domain.project.request.ProjectCreateRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.project.response.ProjectInfoResponseDTO;
 import com.nhnacademy.minidooray.gateway.domain.project.response.ProjectListInfoResponseDTO;
 import com.nhnacademy.minidooray.gateway.service.project.ProjectService;
@@ -18,8 +18,8 @@ public class ProjectServiceImpl implements ProjectService {
   private final ProjectAdaptor projectAdaptor;
 
   @Override
-  public boolean createService(ProjectRegisterRequestDTO projectRegisterRequestDTO) {
-    return projectAdaptor.insertProject(projectRegisterRequestDTO);
+  public boolean createProject(ProjectCreateRequestDTO projectCreateRequestDTO) {
+    return projectAdaptor.insertProject(projectCreateRequestDTO);
   }
 
   @Override
@@ -31,4 +31,5 @@ public class ProjectServiceImpl implements ProjectService {
   public Optional<ProjectInfoResponseDTO> readProject(ProjectInfoRequestDTO projectInfoRequestDTO) {
     return projectAdaptor.selectProjectDetailByProjectId(projectInfoRequestDTO);
   }
+
 }

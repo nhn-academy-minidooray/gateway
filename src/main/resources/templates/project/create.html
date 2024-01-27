@@ -52,16 +52,16 @@
 
   <form method="post" action="/project/create">
     <div class="form-group">
-      <label for="projectAdminId">프로젝트 관리자</label>
-      <input type="text" class="form-control" id="projectAdminId" name="projectAdminId" value="test" readonly>
+      <label for="adminId">프로젝트 관리자</label>
+      <input type="text" class="form-control" id="adminId" name="adminId" th:value="${accountId}" readonly>
     </div>
     <div class="form-group">
-      <label for="projectName">프로젝트 이름</label>
-      <input type="text" class="form-control" id="projectName" name="projectName" required>
+      <label for="name">프로젝트 이름</label>
+      <input type="text" class="form-control" id="name" name="name" required>
     </div>
     <div class="form-group">
-      <label for="projectDescription">프로젝트 설명</label>
-      <textarea class="form-control" id="projectDescription" name="projectDescription" rows="4" required></textarea>
+      <label for="detail">프로젝트 설명</label>
+      <textarea class="form-control" id="detail" name="detail" rows="4" required></textarea>
     </div>
     <button type="submit" class="btn btn-success">만들기</button>
     <a href="/project/home" class="btn btn-secondary">취소</a>

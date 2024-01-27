@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class ProjectListInfoResponseDTO {
   private Long id;
   private String name;
-//  private String detail;
-//  private String status;
+  private String status;
+  private String detail;
+  private String adminId;
 }

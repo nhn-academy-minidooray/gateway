@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectRegisterRequestDTO {
+public class ProjectCreateRequestDTO {
   private String name;
-  private String adminId;
   private String detail;
+  private String adminId;
 }
