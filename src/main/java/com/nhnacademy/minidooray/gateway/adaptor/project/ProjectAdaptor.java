@@ -15,5 +15,4 @@ public interface ProjectAdaptor {
 
   Optional<ProjectInfoResponseDTO> selectProjectDetailByProjectId(
       ProjectInfoRequestDTO projectInfoRequestDTO);
-  //todo account add
 }

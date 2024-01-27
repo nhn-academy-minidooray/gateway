@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectInfoResponseDTO {
-  private long projectId;
+  private Long id;
   private String name;
   private String adminId;
 }
