@@ -34,10 +34,10 @@ class ProjectHomeControllerTest {
   @Test
   void getProjectHomePage() throws Exception{
     List<ProjectListInfoResponseDTO> projectList = List.of(
-        new ProjectListInfoResponseDTO(1L, "프로젝트 1"),
-        new ProjectListInfoResponseDTO(2L, "프로젝트 2"),
-        new ProjectListInfoResponseDTO(3L, "프로젝트 3"),
-        new ProjectListInfoResponseDTO(4L, "프로젝트 4")
+        new ProjectListInfoResponseDTO(1L, "프로젝트 1", "테스트 프로젝트", "활성", "admin"),
+        new ProjectListInfoResponseDTO(2L, "프로젝트 2", "테스트 프로젝트", "활성", "admin"),
+        new ProjectListInfoResponseDTO(3L, "프로젝트 3", "테스트 프로젝트", "활성", "admin"),
+        new ProjectListInfoResponseDTO(4L, "프로젝트 4", "테스트 프로젝트", "활성", "admin")
     );
 
     when(projectService.readProjectList(anyString())).thenReturn(projectList);

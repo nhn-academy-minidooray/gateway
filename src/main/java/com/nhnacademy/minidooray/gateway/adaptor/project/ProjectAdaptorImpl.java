@@ -111,10 +111,7 @@ public class ProjectAdaptorImpl implements ProjectAdaptor {
     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
     HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-    String urlTemplate = UriComponentsBuilder.fromHttpUrl(projectAdaptorProperties.getAddress() + "/project")
-        .queryParam("projectId", projectInfoRequestDTO.getProjectId())
-        .encode()
-        .toUriString();
+    String urlTemplate = projectAdaptorProperties.getAddress() + "/project/" + projectInfoRequestDTO.getProjectId();
     ResponseEntity<ProjectInfoResponseDTO> responseEntity;
     try {
       responseEntity = restTemplate.exchange(

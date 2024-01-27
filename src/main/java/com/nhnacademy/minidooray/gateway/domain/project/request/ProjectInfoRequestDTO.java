@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 //todo 어떤 annotation만 들어가면 된느지 알아보기
 public class ProjectInfoRequestDTO {
-  private String projectId;
+  private long projectId;
 }
