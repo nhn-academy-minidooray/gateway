@@ -1,6 +1,5 @@
-package com.nhnacademy.minidooray.gateway.controller.project;
+package com.nhnacademy.minidooray.gateway.controller.account;
 
-import com.nhnacademy.minidooray.gateway.domain.account.Account;
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountInfoRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.account.response.AccountInfoResponseDTO;
 import com.nhnacademy.minidooray.gateway.exception.AccountInfoNotFoundException;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 @Controller
 @RequestMapping("/project/mypage")
 @RequiredArgsConstructor
-public class MyPageController {
+public class AccountDetailController {
   private final AccountClientService accountClientService;
 
   @GetMapping

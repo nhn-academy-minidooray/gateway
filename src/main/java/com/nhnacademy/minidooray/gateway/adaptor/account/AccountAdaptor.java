@@ -1,4 +1,4 @@
-package com.nhnacademy.minidooray.gateway.adaptor;
+package com.nhnacademy.minidooray.gateway.adaptor.account;
 
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountInfoRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountLoginRequestDTO;

@@ -1,8 +1,7 @@
-package com.nhnacademy.minidooray.gateway.adaptor.impl;
+package com.nhnacademy.minidooray.gateway.adaptor.account;
 
-import com.nhnacademy.minidooray.gateway.adaptor.AccountAdaptor;
+import com.nhnacademy.minidooray.gateway.adaptor.account.AccountAdaptor;
 import com.nhnacademy.minidooray.gateway.config.AccountAdaptorProperties;
-import com.nhnacademy.minidooray.gateway.domain.account.Account;
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountInfoRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountLoginRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountRegisterRequestDTO;
@@ -102,7 +101,6 @@ public class AccountAdaptorImpl implements AccountAdaptor {
     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
     HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-    log.debug("selectAccount: header -> {}, body -> {}", requestEntity.getHeaders(), requestEntity.getBody());
     ResponseEntity<AccountInfoResponseDTO> responseEntity;
     try {
       responseEntity = restTemplate.exchange(
