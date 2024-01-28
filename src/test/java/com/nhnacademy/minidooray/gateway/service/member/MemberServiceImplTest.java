@@ -9,8 +9,8 @@ import static org.mockito.Mockito.when;
 import com.nhnacademy.minidooray.gateway.adaptor.member.MemberAdaptor;
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountInfoRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.account.response.AccountInfoResponseDTO;
-import com.nhnacademy.minidooray.gateway.domain.member.request.MemberAddProjectRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.member.request.MemberListRequestDTO;
+import com.nhnacademy.minidooray.gateway.domain.member.request.MemberProjectRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.member.response.MemberListResponseDTO;
 import com.nhnacademy.minidooray.gateway.service.account.AccountClientService;
 import java.util.List;
@@ -48,7 +48,7 @@ class MemberServiceImplTest {
     @Test
     @DisplayName("프로젝트 멤버 등록 성공")
     void testCreateMemberInProjectSuccess() {
-        MemberAddProjectRequestDTO requestDTO = new MemberAddProjectRequestDTO(1L, "tester");
+        MemberProjectRequestDTO requestDTO = new MemberProjectRequestDTO(1L, "tester");
         AccountInfoRequestDTO accountInfoRequestDTO = new AccountInfoRequestDTO(requestDTO.getAccountId());
         MemberListRequestDTO memberListRequestDTO = new MemberListRequestDTO(requestDTO.getProjectId());
 
@@ -67,7 +67,7 @@ class MemberServiceImplTest {
     @Test
     @DisplayName("계정이 존재 하지 않을 경우, 멤버 등록 실패")
     void testCreateMemberInProjectFailed() {
-        MemberAddProjectRequestDTO requestDTO = new MemberAddProjectRequestDTO(1L, "tester");
+        MemberProjectRequestDTO requestDTO = new MemberProjectRequestDTO(1L, "tester");
         AccountInfoRequestDTO accountInfoRequestDTO = new AccountInfoRequestDTO(requestDTO.getAccountId());
 
         when(accountClientService.readAccount(accountInfoRequestDTO))
@@ -79,13 +79,13 @@ class MemberServiceImplTest {
 
         verify(accountClientService).readAccount(accountInfoRequestDTO);
         verify(memberAdaptor, never()).getMemberListByProjectId(any(MemberListRequestDTO.class));
-        verify(memberAdaptor, never()).insertMemberInProject(any(MemberAddProjectRequestDTO.class));
+        verify(memberAdaptor, never()).insertMemberInProject(any(MemberProjectRequestDTO.class));
     }
 
     @Test
     @DisplayName("이미 등록된 멤버일 경우, 멤버 등록 실패")
     void testCreateMemberInProjectWhenAlreadyRegisterMemberInProject() {
-        MemberAddProjectRequestDTO requestDTO = new MemberAddProjectRequestDTO(1L, "tester");
+        MemberProjectRequestDTO requestDTO = new MemberProjectRequestDTO(1L, "tester");
         AccountInfoRequestDTO accountInfoRequestDTO = new AccountInfoRequestDTO(requestDTO.getAccountId());
         MemberListRequestDTO memberListRequestDTO = new MemberListRequestDTO(requestDTO.getProjectId());
         MemberListResponseDTO memberListResponseDTO = new MemberListResponseDTO(requestDTO.getAccountId());
@@ -100,7 +100,7 @@ class MemberServiceImplTest {
 
         verify(accountClientService).readAccount(accountInfoRequestDTO);
         verify(memberAdaptor).getMemberListByProjectId(memberListRequestDTO);
-        verify(memberAdaptor, never()).insertMemberInProject(any(MemberAddProjectRequestDTO.class));
+        verify(memberAdaptor, never()).insertMemberInProject(any(MemberProjectRequestDTO.class));
     }
 
 }
