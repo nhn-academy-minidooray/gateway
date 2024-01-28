@@ -3,7 +3,7 @@ package com.nhnacademy.minidooray.gateway.controller.common;
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountLoginRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.account.response.AccountStatusInfoResponseDTO;
 import com.nhnacademy.minidooray.gateway.service.account.AccountClientService;
-import com.nhnacademy.minidooray.gateway.service.account.impl.AccountClientServiceImpl;
+import java.util.Objects;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,14 +26,17 @@ public class AccountLoginController {
   private final AccountClientService accountClientService;
 
   @GetMapping
-  public String getLoginPage() {
+  public String getLoginPage(HttpServletRequest request) {
+    HttpSession session = request.getSession(false);
+    if(Objects.nonNull(session) && Objects.nonNull(session.getAttribute("ACCOUNT_ID"))) {
+      return "redirect:/project/home";
+    }
     return "common/login";
   }
 
   @PostMapping
   public String doLogin(@Valid @ModelAttribute AccountLoginRequestDTO accountLoginRequestDTO, BindingResult bindingResult
       , HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    log.debug("doLogin(): Login request with id -> {}, pw -> {}", accountLoginRequestDTO.getId(), accountLoginRequestDTO.getPassword());
     if(bindingResult.hasErrors()) {
       redirectAttributes.addFlashAttribute("error", "아이디나 비밀번호가 규칙에 맞지 않습니다! 다시 확인해 주세요!");
       return "redirect:/login";
@@ -44,23 +47,18 @@ public class AccountLoginController {
       AccountStatusInfoResponseDTO accountInfo = accountInfoWrapped.get();
       String accountId = accountInfo.getId();
       String accountStatus = accountInfo.getStatus();
-      if(accountStatus.equals("가입")) {
+      if("가입".equals(accountStatus)) {
         HttpSession session = request.getSession(true);
         session.setAttribute("ACCOUNT_ID", accountId);
-        log.debug("doLogin(): login success, id -> ", session.getAttribute("ACCOUNT_ID"));
         return "redirect:/project/home";
-      } else if(accountStatus.equals("휴면")) {
-        // todo 휴면 유저일 경우
+      } else if("휴면".equals(accountStatus)) {
         redirectAttributes.addFlashAttribute("error", "휴면 상태의 유저는 계정 활성화 작업이 필요합니다");
         return "redirect:/login";
-      } else if(accountStatus.equals("탈퇴")) {
-        // todo 탈퇴한 유저일 경우
+      } else if("탈퇴".equals(accountStatus)) {
         redirectAttributes.addFlashAttribute("error", "탈퇴를 진행한 계정은 로그인할 수 없습니다");
         return "redirect:/login";
       }
     }
-    log.debug("doLogin(): login failed");
-    // todo do something when login failed
     redirectAttributes.addFlashAttribute("error", "잘못된 아이디 혹은 비밀번호를 입력하셨습니다");
     return "redirect:/login";
   }
