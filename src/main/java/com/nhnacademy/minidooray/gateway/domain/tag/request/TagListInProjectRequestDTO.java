@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TagInfoRequestDTO {
+public class TagListInProjectRequestDTO {
   private Long projectId;
-  private long taskId;
 }

@@ -3,7 +3,8 @@ package com.nhnacademy.minidooray.gateway.adaptor.tag;
 import com.nhnacademy.minidooray.gateway.config.ProjectAdaptorProperties;
 import com.nhnacademy.minidooray.gateway.domain.tag.request.TagCreateRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.tag.request.TagDeleteRequestDTO;
-import com.nhnacademy.minidooray.gateway.domain.tag.request.TagInfoRequestDTO;
+import com.nhnacademy.minidooray.gateway.domain.tag.request.TagListInProjectRequestDTO;
+import com.nhnacademy.minidooray.gateway.domain.tag.request.TagListInTaskRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.tag.request.TagModifyRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.tag.response.TagInfoResponseDTO;
 import java.util.Collections;
@@ -31,15 +32,46 @@ public class TagAdaptorImpl implements TagAdaptor{
   private final ProjectAdaptorProperties projectAdaptorProperties;
 
   @Override
-  public List<TagInfoResponseDTO> selectTagListInProject(TagInfoRequestDTO tagInfoRequestDTO) {
+  public List<TagInfoResponseDTO> selectTagListInTask(
+      TagListInTaskRequestDTO tagListInTaskRequestDTO) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
     HttpEntity<String> requestEntity = new HttpEntity<>(headers);
     String urlTemplate = UriComponentsBuilder.fromHttpUrl(projectAdaptorProperties.getAddress() + "/tag/list")
-        .queryParam("projectId", tagInfoRequestDTO.getProjectId())
-        .queryParam("taskId", tagInfoRequestDTO.getTaskId())
+        .queryParam("taskId", tagListInTaskRequestDTO.getTaskId())
+        .encode()
+        .toUriString();
+    ResponseEntity<List<TagInfoResponseDTO>> responseEntity;
+    try {
+      responseEntity = restTemplate.exchange(
+          urlTemplate,
+          HttpMethod.GET,
+          requestEntity,
+          new ParameterizedTypeReference<List<TagInfoResponseDTO>>() {
+          }
+      );
+      if(responseEntity.getStatusCode().value() == HttpStatus.OK.value())
+        return responseEntity.getBody();
+    } catch (HttpClientErrorException e) {
+
+    } catch (HttpServerErrorException e) {
+
+    }
+    return Collections.emptyList();
+  }
+
+  @Override
+  public List<TagInfoResponseDTO> selectTagListInProject(
+      TagListInProjectRequestDTO tagListInProjectRequestDTO) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+
+    HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+    String urlTemplate = UriComponentsBuilder.fromHttpUrl(projectAdaptorProperties.getAddress() + "/tag/list")
+        .queryParam("projectId", tagListInProjectRequestDTO.getProjectId())
         .encode()
         .toUriString();
     ResponseEntity<List<TagInfoResponseDTO>> responseEntity;
@@ -127,7 +159,7 @@ public class TagAdaptorImpl implements TagAdaptor{
     try {
       responseEntity = restTemplate.exchange(
           urlTemplate,
-          HttpMethod.PUT,
+          HttpMethod.DELETE,
           requestEntity,
           new ParameterizedTypeReference<>() {
           }, tagDeleteRequestDTO.getTagId()

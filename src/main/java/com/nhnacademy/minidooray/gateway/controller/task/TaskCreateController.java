@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/project/task")
 public class TaskCreateController {
-  @PostMapping
+  @PostMapping("/create")
   public String postTaskInProject(@ModelAttribute TaskCreateRequestDTO taskCreateRequestDTO) {
     return "";
     // todo
