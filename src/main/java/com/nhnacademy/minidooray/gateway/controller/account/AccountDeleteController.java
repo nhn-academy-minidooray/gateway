@@ -17,7 +17,6 @@ public class AccountDeleteController {
   private final AccountClientService accountClientService;
   @DeleteMapping
   public String doDelete(@SessionAttribute(name = "USER_INFO") String accountId) {
-    //todo 탈퇴 진행
     if(accountClientService.deleteAccount(new AccountInfoRequestDTO(accountId))) {
       log.debug("doDelete(): delete success");
       return "redirect:/login";

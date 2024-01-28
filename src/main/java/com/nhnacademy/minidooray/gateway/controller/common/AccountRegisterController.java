@@ -3,7 +3,10 @@ package com.nhnacademy.minidooray.gateway.controller.common;
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountRegisterRequestDTO;
 import com.nhnacademy.minidooray.gateway.service.account.AccountClientService;
 import com.nhnacademy.minidooray.gateway.service.account.impl.AccountClientServiceImpl;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +25,11 @@ public class AccountRegisterController {
   private final AccountClientService accountClientService;
 
   @GetMapping
-  public String getRegisterPage() {
+  public String getRegisterPage(HttpServletRequest request) {
+    HttpSession session = request.getSession(false);
+    if(Objects.nonNull(session) && Objects.nonNull(session.getAttribute("ACCOUNT_ID"))) {
+      return "redirect:/project/home";
+    }
     return "common/register";
   }
 

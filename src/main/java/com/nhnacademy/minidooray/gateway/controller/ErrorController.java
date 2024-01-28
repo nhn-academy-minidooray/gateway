@@ -13,5 +13,4 @@ public class ErrorController {
     model.addAttribute("debug", true);
     return "error";
   }
-
 }
