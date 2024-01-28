@@ -55,12 +55,8 @@ public class ProjectDetailController {
       model.addAttribute("taskList", tasksInProject);
       model.addAttribute("tagList", tagsInProject);
       model.addAttribute("milestoneList", milestonesInProject);
-      log.debug("taskList -> {}", tasksInProject.size());
-      log.debug("tagList -> {}", tagsInProject.size());
-      log.debug("milestoneList -> {}", milestonesInProject.size());
       return "project/detail";
     }
-    // error시?
     return "redirect:/project/home";
   }
 }

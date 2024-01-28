@@ -23,7 +23,6 @@ public class TaskManageController {
   private final TaskService taskService;
   @PostMapping("/create")
   public String postTaskInProject(@ModelAttribute TaskCreateRequestDTO taskCreateRequestDTO, RedirectAttributes redirectAttributes) {
-    log.debug("taskCreate: {}, {}, {}, {}", taskCreateRequestDTO.getProjectId(), taskCreateRequestDTO.getName(), taskCreateRequestDTO.getDetail(), taskCreateRequestDTO.getMilestoneId());
     if(!taskService.createTaskInProject(taskCreateRequestDTO)) {
       redirectAttributes.addFlashAttribute("error", "태스크를 추가하면서 오류가 발생하였습니다");
       return "redirect:/project/" + taskCreateRequestDTO.getProjectId();

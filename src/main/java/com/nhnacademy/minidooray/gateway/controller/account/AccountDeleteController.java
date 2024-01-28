@@ -18,10 +18,8 @@ public class AccountDeleteController {
   @DeleteMapping
   public String doDelete(@SessionAttribute(name = "USER_INFO") String accountId) {
     if(accountClientService.deleteAccount(new AccountInfoRequestDTO(accountId))) {
-      log.debug("doDelete(): delete success");
       return "redirect:/login";
     }
-    log.debug("doDelete(): delete failed");
     return "redirect:/login";
   }
 }

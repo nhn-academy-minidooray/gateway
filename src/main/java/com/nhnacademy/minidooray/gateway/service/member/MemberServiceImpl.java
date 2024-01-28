@@ -27,12 +27,10 @@ public class MemberServiceImpl implements MemberService{
   public boolean createMemberInProject(MemberProjectRequestDTO memberProjectRequestDTO) {
     if(accountClientService.readAccount(new AccountInfoRequestDTO(
         memberProjectRequestDTO.getAccountId())).isPresent()) {
-      log.debug("존재하는 계정");
       if(memberAdaptor.getMemberListByProjectId(
           new MemberListRequestDTO(memberProjectRequestDTO.getProjectId())).stream().noneMatch(
           memberResponse -> memberResponse.getAccountId()
               .equals(memberProjectRequestDTO.getAccountId()))) {
-        log.debug("멤버에 현재 없음");
         return memberAdaptor.insertMemberInProject(memberProjectRequestDTO);
       }
     }

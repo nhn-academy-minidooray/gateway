@@ -33,7 +33,6 @@ public class TaskDetailController {
 
   @GetMapping("/{projectId}/{taskId}")
   public String getTaskDetailPage(@PathVariable(name = "projectId") Long projectId, @PathVariable(name = "taskId") Long taskId, Model model) {
-    log.debug("{}, {}", projectId, taskId);
     Optional<TaskDetailResponseDTO> taskWrapper = taskService.readTaskByTaskId(taskId);
     List<TagInfoResponseDTO> tagList = tagService.readTagListInTask(new TagListInTaskRequestDTO(taskId));
     MilestoneInfoResponseDTO milestone =  milestoneService.readMilestoneInTask(taskId).orElse(null);

@@ -20,9 +20,7 @@ public class ProjectHomeController {
   private final ProjectService projectService;
   @GetMapping
   public String getProjectHomePage(@SessionAttribute(name = "ACCOUNT_ID") String accountId, Model model) {
-    log.debug("getProjectHomePage(): accountId -> {}", accountId);
     List<ProjectListInfoResponseDTO> projectList = projectService.readProjectList(accountId);
-    log.debug("getProjectHomePage(): projectList -> {}", projectList.size());
     model.addAttribute("projectList", projectList);
     return "project/home";
   }

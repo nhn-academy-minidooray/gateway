@@ -22,9 +22,7 @@ public class TaskServiceImpl implements TaskService{
   public List<TaskInfoResponseDTO> readTaskListInProject(TaskInfoRequestDTO taskInfoRequestDTO) {
     List<TaskInfoResponseDTO> taskList = taskAdaptor.selectTaskListInProject(taskInfoRequestDTO);
     for(TaskInfoResponseDTO t : taskList) {
-      log.debug("taskList(): id -> {}, name -> {}, detail -> {}, milestoneId -> {}, name -> {}", t.getId(), t.getName(), t.getDetail(), t.getMilestoneId(), t.getMilestoneName());
       for(String tag: t.getTagNameList()) {
-        log.debug("taskList(): tag -> {}", tag);
       }
     }
     return taskList;

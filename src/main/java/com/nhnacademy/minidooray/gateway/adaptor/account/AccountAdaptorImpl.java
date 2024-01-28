@@ -47,15 +47,11 @@ public class AccountAdaptorImpl implements AccountAdaptor {
           new ParameterizedTypeReference<>() {
           }
       );
-      log.debug("insertAccount(): [Create Success] statusCode -> {}", responseEntity.getStatusCode().value());
       return responseEntity.getStatusCode().value() == HttpStatus.CREATED.value();
     } catch (HttpClientErrorException e) {
-      log.debug("insertAccount(): [Client Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
       if (e.getRawStatusCode() == HttpStatus.CONFLICT.value()) {
-        log.debug("insertAccount(): status -> conflict (create failed)");
       }
     } catch (HttpServerErrorException e) {
-      log.debug("insertAccount(): [Server Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
       throw e;
       // todo 이 부분은 서버 에러라 에러 페이지로 보내는 게 어떨지?
     }
@@ -78,16 +74,12 @@ public class AccountAdaptorImpl implements AccountAdaptor {
           new ParameterizedTypeReference<>() {
           }
       );
-      log.debug("isMatchAccount(): [Create Success] statusCode -> {}", responseEntity.getStatusCode().value());
       if(responseEntity.getStatusCode().value() == HttpStatus.OK.value())
         return Optional.ofNullable(responseEntity.getBody());
     } catch (HttpClientErrorException e) {
-      log.debug("isMatchAccount(): [Client Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
       if (e.getRawStatusCode() == HttpStatus.CONFLICT.value()) {
-        log.debug("isMatchAccount(): status -> conflict (create failed)");
       }
     } catch (HttpServerErrorException e) {
-      log.debug("isMatchAccount(): [Server Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
       throw e;
       // todo 이 부분은 서버 에러라 에러 페이지로 보내는 게 어떨지?
     }
@@ -116,10 +108,8 @@ public class AccountAdaptorImpl implements AccountAdaptor {
     } catch (HttpClientErrorException e) {
       log.debug("isMatchAccount(): [Client Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
       if (e.getRawStatusCode() == HttpStatus.CONFLICT.value()) {
-        log.debug("isMatchAccount(): status -> conflict (create failed)");
       }
     } catch (HttpServerErrorException e) {
-      log.debug("isMatchAccount(): [Server Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
       throw e;
       // todo 이 부분은 서버 에러라 에러 페이지로 보내는 게 어떨지?
     }
@@ -142,15 +132,11 @@ public class AccountAdaptorImpl implements AccountAdaptor {
           new ParameterizedTypeReference<>() {
           }
       );
-      log.debug("deleteAccount(): [Delete Success] statusCode -> {}", responseEntity.getStatusCode().value());
       return responseEntity.getStatusCode().value() == HttpStatus.OK.value();
     } catch (HttpClientErrorException e) {
-      log.debug("deleteAccount(): [Client Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
       if (e.getRawStatusCode() == HttpStatus.CONFLICT.value()) {
-        log.debug("deleteAccount(): status -> conflict (create failed)");
       }
     } catch (HttpServerErrorException e) {
-      log.debug("deleteAccount(): [Server Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
       throw e;
       // todo 이 부분은 서버 에러라 에러 페이지로 보내는 게 어떨지?
     }
