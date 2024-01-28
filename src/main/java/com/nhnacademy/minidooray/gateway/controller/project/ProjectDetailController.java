@@ -2,12 +2,19 @@ package com.nhnacademy.minidooray.gateway.controller.project;
 
 import com.nhnacademy.minidooray.gateway.domain.member.request.MemberListRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.member.response.MemberListResponseDTO;
+import com.nhnacademy.minidooray.gateway.domain.milestone.request.MilestoneListInfoRequestDTO;
+import com.nhnacademy.minidooray.gateway.domain.milestone.response.MilestoneInfoResponseDTO;
 import com.nhnacademy.minidooray.gateway.domain.project.request.ProjectInfoRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.project.response.ProjectInfoResponseDTO;
+import com.nhnacademy.minidooray.gateway.domain.tag.request.TagListInProjectRequestDTO;
+import com.nhnacademy.minidooray.gateway.domain.tag.request.TagListInTaskRequestDTO;
+import com.nhnacademy.minidooray.gateway.domain.tag.response.TagInfoResponseDTO;
 import com.nhnacademy.minidooray.gateway.domain.task.request.TaskInfoRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.task.response.TaskInfoResponseDTO;
 import com.nhnacademy.minidooray.gateway.service.member.MemberService;
+import com.nhnacademy.minidooray.gateway.service.milestone.MilestoneService;
 import com.nhnacademy.minidooray.gateway.service.project.ProjectService;
+import com.nhnacademy.minidooray.gateway.service.tag.TagService;
 import com.nhnacademy.minidooray.gateway.service.task.TaskService;
 import java.util.List;
 import java.util.Optional;
@@ -27,12 +34,16 @@ public class ProjectDetailController {
   private final ProjectService projectService;
   private final MemberService memberService;
   private final TaskService taskService;
+  private final TagService tagService;
+  private final MilestoneService milestoneService;
 
   @GetMapping("/{projectId}")
   public String getProjectDetail(@PathVariable long projectId, Model model) {
     Optional<ProjectInfoResponseDTO> projectWrapper = projectService.readProject(new ProjectInfoRequestDTO(projectId));
     List<MemberListResponseDTO> membersInProject = memberService.readMemberList(new MemberListRequestDTO(projectId));
     List<TaskInfoResponseDTO> tasksInProject = taskService.readTaskListInProject(new TaskInfoRequestDTO(projectId));
+    List<TagInfoResponseDTO> tagsInProject = tagService.readTagListInProject(new TagListInProjectRequestDTO(projectId));
+    List<MilestoneInfoResponseDTO> milestonesInProject = milestoneService.readMilestoneListInProject(projectId);
 
     log.debug("getProjectDetail(): projectId -> {}", projectWrapper.get().getId());
     if(projectWrapper.isPresent()) {
@@ -40,7 +51,11 @@ public class ProjectDetailController {
       model.addAttribute("projectInfo", project);
       model.addAttribute("memberList", membersInProject);
       model.addAttribute("taskList", tasksInProject);
+      model.addAttribute("tagList", tagsInProject);
+      model.addAttribute("milestoneList", milestonesInProject);
       log.debug("taskList -> {}", tasksInProject.size());
+      log.debug("tagList -> {}", tagsInProject.size());
+      log.debug("milestoneList -> {}", milestonesInProject.size());
       return "project/detail";
     }
     // error시?

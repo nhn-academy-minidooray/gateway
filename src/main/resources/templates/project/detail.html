@@ -207,10 +207,11 @@
         </div>
         <div class="modal-body">
           <!-- 등록 폼 내용 -->
-          <form method="post" action="/create-tag">
+          <form method="post" action="/project/tag/create">
             <div class="form-group">
               <label for="tagName">태그 이름</label>
-              <input type="text" class="form-control" id="tagName" name="tagName" required>
+              <input name="projectId" th:value="${projectInfo.id}" hidden>
+              <input type="text" class="form-control" id="tagName" name="name" required>
             </div>
             <button type="submit" class="btn btn-success">등록</button>
           </form>
@@ -232,10 +233,11 @@
         </div>
         <div class="modal-body">
           <!-- 등록 폼 내용 -->
-          <form method="post" action="/create-milestone">
+          <form method="post" action="/project/milestone/create">
+            <input name="projectId" th:value="${projectInfo.id}" hidden>
             <div class="form-group">
               <label for="milestoneName">마일스톤 이름</label>
-              <input type="text" class="form-control" id="milestoneName" name="milestoneName" required>
+              <input type="text" class="form-control" id="milestoneName" name="name" required>
             </div>
             <div class="form-group">
               <label for="startDate">시작 날짜</label>
@@ -267,29 +269,33 @@
         </div>
         <div class="modal-body">
           <!-- 등록 폼 내용 -->
-          <form method="post" action="/create-task">
+          <form method="post" action="/project/task/create">
+            <input name="projectId" th:value="${projectInfo.id}" hidden>
             <div class="form-group">
               <label for="taskName">태스크 이름</label>
-              <input type="text" class="form-control" id="taskName" name="taskName" required>
+              <input type="text" class="form-control" id="taskName" name="name" required>
             </div>
             <div class="form-group">
               <label for="taskDescription">태스크 내용</label>
-              <textarea class="form-control" id="taskDescription" name="taskDescription" rows="4" required></textarea>
+              <textarea class="form-control" id="taskDescription" name="detail" rows="4" required></textarea>
             </div>
             <div class="form-group">
               <label for="tags">태그</label>
-              <select multiple class="form-control" id="tags" name="tags">
-                <option>태그1</option>
-                <option>태그2</option>
-                <!-- 추가적인 태그 정보는 프로젝트에서 가져와서 동적으로 생성 -->
+              <select multiple class="form-control" id="tags" name="tagList" th:unless="${#lists.isEmpty(tagList)}">
+                <div th:each="tag : ${tagList}">
+                  <option th:value="${tag.id}" th:text="${tag.name}"></option>
+                </div>
               </select>
+              <input th:if="${#lists.isEmpty(tagList)}" type="text" class="form-control" value="프로젝트에 태그가 존재하지 않습니다" readonly>
             </div>
             <div class="form-group">
               <label for="milestone">마일스톤</label>
-              <select class="form-control" id="milestone" name="milestone">
-                <option>마일스톤1</option>
-                <!-- 추가적인 마일스톤 정보는 프로젝트에서 가져와서 동적으로 생성 -->
+              <select class="form-control" id="milestone" name="milestoneId" th:unless="${#lists.isEmpty(milestoneList)}">
+                <div th:each="milestone : ${milestoneList}">
+                  <option th:value="${milestone.id}" th:text="${milestone.name}"></option>
+                </div>
               </select>
+              <input th:if="${#lists.isEmpty(milestoneList)}" type="text" class="form-control" value="프로젝트에 마일스톤이 존재하지 않습니다" readonly>
             </div>
             <button type="submit" class="btn btn-success">등록</button>
           </form>
