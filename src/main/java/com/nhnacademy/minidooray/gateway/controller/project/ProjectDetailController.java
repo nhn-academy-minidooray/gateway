@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Slf4j
 @Controller
@@ -38,12 +39,13 @@ public class ProjectDetailController {
   private final MilestoneService milestoneService;
 
   @GetMapping("/{projectId}")
-  public String getProjectDetail(@PathVariable long projectId, Model model) {
+  public String getProjectDetail(@PathVariable long projectId, Model model, @SessionAttribute(name = "ACCOUNT_ID") String accountId) {
     Optional<ProjectInfoResponseDTO> projectWrapper = projectService.readProject(new ProjectInfoRequestDTO(projectId));
     List<MemberListResponseDTO> membersInProject = memberService.readMemberList(new MemberListRequestDTO(projectId));
     List<TaskInfoResponseDTO> tasksInProject = taskService.readTaskListInProject(new TaskInfoRequestDTO(projectId));
     List<TagInfoResponseDTO> tagsInProject = tagService.readTagListInProject(new TagListInProjectRequestDTO(projectId));
     List<MilestoneInfoResponseDTO> milestonesInProject = milestoneService.readMilestoneListInProject(projectId);
+    model.addAttribute("accountId", accountId);
 
     log.debug("getProjectDetail(): projectId -> {}", projectWrapper.get().getId());
     if(projectWrapper.isPresent()) {

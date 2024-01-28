@@ -2,7 +2,7 @@ package com.nhnacademy.minidooray.gateway.service.member;
 
 import com.nhnacademy.minidooray.gateway.adaptor.member.MemberAdaptor;
 import com.nhnacademy.minidooray.gateway.domain.account.request.AccountInfoRequestDTO;
-import com.nhnacademy.minidooray.gateway.domain.member.request.MemberAddProjectRequestDTO;
+import com.nhnacademy.minidooray.gateway.domain.member.request.MemberProjectRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.member.request.MemberListRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.member.response.MemberListResponseDTO;
 import com.nhnacademy.minidooray.gateway.service.account.AccountClientService;
@@ -24,18 +24,23 @@ public class MemberServiceImpl implements MemberService{
   }
 
   @Override
-  public boolean createMemberInProject(MemberAddProjectRequestDTO memberAddProjectRequestDTO) {
+  public boolean createMemberInProject(MemberProjectRequestDTO memberProjectRequestDTO) {
     if(accountClientService.readAccount(new AccountInfoRequestDTO(
-        memberAddProjectRequestDTO.getAccountId())).isPresent()) {
+        memberProjectRequestDTO.getAccountId())).isPresent()) {
       log.debug("존재하는 계정");
       if(memberAdaptor.getMemberListByProjectId(
-          new MemberListRequestDTO(memberAddProjectRequestDTO.getProjectId())).stream().noneMatch(
+          new MemberListRequestDTO(memberProjectRequestDTO.getProjectId())).stream().noneMatch(
           memberResponse -> memberResponse.getAccountId()
-              .equals(memberAddProjectRequestDTO.getAccountId()))) {
+              .equals(memberProjectRequestDTO.getAccountId()))) {
         log.debug("멤버에 현재 없음");
-        return memberAdaptor.insertMemberInProject(memberAddProjectRequestDTO);
+        return memberAdaptor.insertMemberInProject(memberProjectRequestDTO);
       }
     }
     return false;
+  }
+
+  @Override
+  public boolean deleteMemberInProject(MemberProjectRequestDTO memberProjectRequestDTO) {
+    return memberAdaptor.deleteMemberInProject(memberProjectRequestDTO);
   }
 }

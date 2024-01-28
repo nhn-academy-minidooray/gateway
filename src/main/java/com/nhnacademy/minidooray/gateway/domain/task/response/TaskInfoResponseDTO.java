@@ -12,6 +12,8 @@ public class TaskInfoResponseDTO {
   private Long id;
   private String name;
   private String detail;
-  private List<String> tagList;
-  private String milestoneId;
+  private List<Long> tagIdList;
+  private List<String> tagNameList;
+  private Long milestoneId;
+  private String milestoneName;
 }

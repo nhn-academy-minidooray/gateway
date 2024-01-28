@@ -66,7 +66,7 @@
   <h1 class="mt-4" th:text="${projectInfo.name}"></h1>
   <div class="row mb-2 ml-1">
     <div class="mr-2">
-      <button class="btn btn-success" data-toggle="modal" data-target="#addMemberModal">멤버 등록</button>
+      <button class="btn btn-success" data-toggle="modal" data-target="#addMemberModal" th:if="${#strings.equals(accountId, projectInfo.adminId)}">멤버 등록</button>
     </div>
   </div>
   <div class="mb-4">
@@ -80,17 +80,25 @@
             <tr>
               <th>아이디</th>
               <th>역할</th>
+              <th>기타</th>
             </tr>
             </thead>
             <tbody >
             <tr>
               <td th:text="${projectInfo.adminId}"></td>
               <td>관리자</td>
+              <td></td>
             </tr>
             <div th:if="${memberList}" th:each="member : ${memberList}">
               <tr th:if="${!#strings.equals(projectInfo.adminId, member.accountId)}">
                 <td th:text="${member.accountId}"></td>
                 <td>멤버</td>
+                <td>
+                  <form action="/project/member/delete" method="post">
+                    <input name="projectId" th:value="${projectInfo.id}" hidden>
+                    <button class="btn btn-danger" th:if="${#strings.equals(accountId, projectInfo.adminId)}" th:value="${member.accountId}" name="accountId">멤버 삭제</button>
+                  </form>
+                </td>
               </tr>
             </div>
             </tbody>
@@ -120,47 +128,28 @@
   <div class="mb-4">
     <div class="row">
       <!-- Sample Task Card 1 -->
-      <div class="col-md-6">
-        <div class="card task-card">
+      <div class="col-md-6" th:each="task, iterStat : ${taskList}">
+        <input name="taskId" th:value="${task.id}" hidden>
+        <div class="card task-card" >
           <div class="card-body">
-            <h3 class="card-title">뷰 개발하기</h3>
-            <p class="card-text">상황에 알맞는 뷰를 개발하는 것</p>
+            <a th:href="@{'/project/' + ${projectInfo.id} + '/' + ${task.id}}"><h3 class="card-title" th:text="${task.name}"></h3></a>
+            <p class="card-text" th:text="${task.detail}"></p>
             <div class="col mb-2">
               <div class="row mb-2">
-                <button class="btn btn-primary mr-2" disabled>태그 1</button>
-                <button class="btn btn-primary mr-2" disabled>태그 2</button>
-                <button class="btn btn-primary mr-2" disabled>태그 3</button>
+                <div th:each="tag : ${task.tagNameList}" th:if="${#lists.size(task.tagNameList) > 0}">
+                  <button class="btn btn-primary mr-2" th:text="${tag}" disabled></button>
+                </div>
               </div>
               <div class="row">
-              <button class="btn btn-info" data-toggle="modal" data-target="#createMilestoneModal">마일스톤 1</button>
+                <button class="btn btn-info" th:if="${task.milestoneName}" th:text="${task.milestoneName}" disabled></button>
               </div>
             </div>
           </div>
         </div>
+        <div th:if="${iterStat.index % 2 == 1}" class="w-100 d-none d-md-block"></div>
       </div>
-
-      <!-- Sample Task Card 2 -->
-      <div class="col-md-6">
-        <div class="card task-card">
-          <div class="card-body">
-            <h3 class="card-title">컨트롤러 개발하기</h3>
-            <p class="card-text">REST API 적용을 위한 컨트롤러 메서드</p>
-            <div class="col mb-2">
-              <div class="row mb-2">
-                <button class="btn btn-primary mr-2" disabled>태그 1</button>
-                <button class="btn btn-primary mr-2" disabled>태그 2</button>
-              </div>
-              <div class="row">
-                <button class="btn btn-info" data-toggle="modal" data-target="#createMilestoneModal">마일스톤 1</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Repeat the above pattern for additional task cards dynamically based on the actual tasks -->
+      <h3 class="mt-5" th:if="${#lists.isEmpty(taskList)}">태스크가 존재하지 않습니다</h3>
     </div>
-  </div>
 
 
   <!-- 등록 모달 -->
@@ -282,6 +271,7 @@
             <div class="form-group">
               <label for="tags">태그</label>
               <select multiple class="form-control" id="tags" name="tagList" th:unless="${#lists.isEmpty(tagList)}">
+                <option th:value="${null}">선택 안함</option>
                 <div th:each="tag : ${tagList}">
                   <option th:value="${tag.id}" th:text="${tag.name}"></option>
                 </div>
@@ -291,6 +281,7 @@
             <div class="form-group">
               <label for="milestone">마일스톤</label>
               <select class="form-control" id="milestone" name="milestoneId" th:unless="${#lists.isEmpty(milestoneList)}">
+                <option th:value="${null}">선택 안함</option>
                 <div th:each="milestone : ${milestoneList}">
                   <option th:value="${milestone.id}" th:text="${milestone.name}"></option>
                 </div>

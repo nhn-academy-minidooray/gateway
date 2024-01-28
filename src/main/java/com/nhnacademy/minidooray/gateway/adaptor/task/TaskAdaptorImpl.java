@@ -1,12 +1,15 @@
 package com.nhnacademy.minidooray.gateway.adaptor.task;
 
 import com.nhnacademy.minidooray.gateway.config.ProjectAdaptorProperties;
+import com.nhnacademy.minidooray.gateway.domain.milestone.response.MilestoneInfoResponseDTO;
 import com.nhnacademy.minidooray.gateway.domain.task.request.TaskCreateRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.task.request.TaskDeleteRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.task.request.TaskInfoRequestDTO;
+import com.nhnacademy.minidooray.gateway.domain.task.response.TaskDetailResponseDTO;
 import com.nhnacademy.minidooray.gateway.domain.task.response.TaskInfoResponseDTO;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -57,6 +60,34 @@ public class TaskAdaptorImpl implements TaskAdaptor{
 
     }
     return Collections.emptyList();
+  }
+
+  @Override
+  public Optional<TaskDetailResponseDTO> selectTaskByTaskId(Long taskId) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+
+    String urlTemplate = projectAdaptorProperties.getAddress() + "/task/{taskId}";
+    HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+    ResponseEntity<TaskDetailResponseDTO> responseEntity;
+    try {
+      responseEntity = restTemplate.exchange(
+          urlTemplate,
+          HttpMethod.GET,
+          requestEntity,
+          new ParameterizedTypeReference<>() {
+          }, taskId
+      );
+      if(responseEntity.getStatusCode().value() == HttpStatus.OK.value())
+        return Optional.ofNullable(responseEntity.getBody());
+    } catch (HttpClientErrorException e) {
+
+    } catch (HttpServerErrorException e) {
+
+    }
+    return Optional.empty();
   }
 
   @Override
@@ -125,7 +156,7 @@ public class TaskAdaptorImpl implements TaskAdaptor{
     try {
       responseEntity = restTemplate.exchange(
           urlTemplate,
-          HttpMethod.PUT,
+          HttpMethod.DELETE,
           requestEntity,
           new ParameterizedTypeReference<>() {
           }, taskDeleteRequestDTO.getTaskId()

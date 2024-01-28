@@ -1,7 +1,7 @@
 package com.nhnacademy.minidooray.gateway.adaptor.member;
 
 import com.nhnacademy.minidooray.gateway.config.ProjectAdaptorProperties;
-import com.nhnacademy.minidooray.gateway.domain.member.request.MemberAddProjectRequestDTO;
+import com.nhnacademy.minidooray.gateway.domain.member.request.MemberProjectRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.member.request.MemberListRequestDTO;
 import com.nhnacademy.minidooray.gateway.domain.member.response.MemberListResponseDTO;
 import java.util.Collections;
@@ -67,12 +67,12 @@ public class MemberAdaptorImpl implements MemberAdaptor{
   }
 
   @Override
-  public boolean insertMemberInProject(MemberAddProjectRequestDTO memberAddProjectRequestDTO) {
+  public boolean insertMemberInProject(MemberProjectRequestDTO memberProjectRequestDTO) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
-    HttpEntity<MemberAddProjectRequestDTO> requestEntity = new HttpEntity<>(memberAddProjectRequestDTO, headers);
+    HttpEntity<MemberProjectRequestDTO> requestEntity = new HttpEntity<>(memberProjectRequestDTO, headers);
     String urlTemplate = projectAdaptorProperties.getAddress() + "/member/register";
     ResponseEntity<String> responseEntity;
     try {
@@ -85,6 +85,38 @@ public class MemberAdaptorImpl implements MemberAdaptor{
       );
 
       if(responseEntity.getStatusCode().value() == HttpStatus.CREATED.value())
+        return true;
+    } catch (HttpClientErrorException e) {
+      log.debug("getMemberListByProjectId(): [Client Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+      if (e.getRawStatusCode() == HttpStatus.NOT_FOUND.value()) {
+        log.debug("getMemberListByProjectId(): status -> not_found (failed)");
+      }
+    } catch (HttpServerErrorException e) {
+      log.debug("getMemberListByProjectId(): [Server Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
+      throw e;
+    }
+    return false;
+  }
+
+  @Override
+  public boolean deleteMemberInProject(MemberProjectRequestDTO memberProjectRequestDTO) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+
+    HttpEntity<MemberProjectRequestDTO> requestEntity = new HttpEntity<>(memberProjectRequestDTO, headers);
+    String urlTemplate = projectAdaptorProperties.getAddress() + "/member/delete";
+    ResponseEntity<String> responseEntity;
+    try {
+      responseEntity = restTemplate.exchange(
+          urlTemplate,
+          HttpMethod.DELETE,
+          requestEntity,
+          new ParameterizedTypeReference<>() {
+          }
+      );
+
+      if(responseEntity.getStatusCode().value() == HttpStatus.OK.value())
         return true;
     } catch (HttpClientErrorException e) {
       log.debug("getMemberListByProjectId(): [Client Error] statusCode -> {}, responseBody -> {}", e.getRawStatusCode(), e.getResponseBodyAsString());
