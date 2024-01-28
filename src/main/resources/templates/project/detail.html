@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Detail</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding-top: 56px; /* Fixed navbar height */
+    }
+
+    .navbar {
+      background-color: #343a40;
+    }
+
+    .navbar-brand, .navbar-nav a {
+      color: #ffffff;
+    }
+
+    .container-fluid {
+      padding: 20px;
+    }
+
+    .task-card {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <a class="navbar-brand" href="#">Mini-Dooray!</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/project/home">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/project/mypage">My Page</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- error handling -->
+<div th:if="${error}" class="alert alert-danger padding-btm" role="alert">
+  <span th:text="${error}"></span>
+</div>
+
+<!-- info alert -->
+<div th:if="${info}" class="alert alert-success padding-btm" role="alert">
+  <span th:text="${info}"></span>
+</div>
+
+<div class="container-fluid">
+  <!-- 프로젝트 정보 -->
+  <h1 class="mt-4" th:text="${projectInfo.name}"></h1>
+  <div class="row mb-2 ml-1">
+    <div class="mr-2">
+      <button class="btn btn-success" data-toggle="modal" data-target="#addMemberModal" th:if="${#strings.equals(accountId, projectInfo.adminId)}">멤버 등록</button>
+    </div>
+  </div>
+  <div class="mb-4">
+    <!-- Project Member Card -->
+    <div class="card task-card">
+      <div class="card-body">
+        <h5 class="card-title">프로젝트 멤버</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>아이디</th>
+              <th>역할</th>
+              <th>기타</th>
+            </tr>
+            </thead>
+            <tbody >
+            <tr>
+              <td th:text="${projectInfo.adminId}"></td>
+              <td>관리자</td>
+              <td></td>
+            </tr>
+            <div th:if="${memberList}" th:each="member : ${memberList}">
+              <tr th:if="${!#strings.equals(projectInfo.adminId, member.accountId)}">
+                <td th:text="${member.accountId}"></td>
+                <td>멤버</td>
+                <td>
+                  <form action="/project/member/delete" method="post">
+                    <input name="projectId" th:value="${projectInfo.id}" hidden>
+                    <button class="btn btn-danger" th:if="${#strings.equals(accountId, projectInfo.adminId)}" th:value="${member.accountId}" name="accountId">멤버 삭제</button>
+                  </form>
+                </td>
+              </tr>
+            </div>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- Additional project member information dynamically generated from the project -->
+  </div>
+
+
+
+  <!-- 태스크 목록 -->
+  <h2 class="mt-4">태스크 목록</h2>
+  <div class="row mb-2 ml-1">
+    <div class="mr-2">
+      <button class="btn btn-success" data-toggle="modal" data-target="#createTaskModal">태스크 등록</button>
+    </div>
+    <div class="mr-2"> <!-- 수정: mr-2 클래스 추가 -->
+      <button class="btn btn-primary" data-toggle="modal" data-target="#createTagModal">태그 추가</button>
+    </div>
+    <div> <!-- 수정: mr-2 클래스 추가 -->
+      <button class="btn btn-info" data-toggle="modal" data-target="#createMilestoneModal">마일스톤 추가</button>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <div class="row">
+      <!-- Sample Task Card 1 -->
+      <div class="col-md-6" th:each="task, iterStat : ${taskList}">
+        <input name="taskId" th:value="${task.id}" hidden>
+        <div class="card task-card" >
+          <div class="card-body">
+            <a th:href="@{'/project/' + ${projectInfo.id} + '/' + ${task.id}}"><h3 class="card-title" th:text="${task.name}"></h3></a>
+            <p class="card-text" th:text="${task.detail}"></p>
+            <div class="col mb-2">
+              <div class="row mb-2">
+                <div th:each="tag : ${task.tagNameList}" th:if="${#lists.size(task.tagNameList) > 0}">
+                  <button class="btn btn-primary mr-2" th:text="${tag}" disabled></button>
+                </div>
+              </div>
+              <div class="row">
+                <button class="btn btn-info" th:if="${task.milestoneName}" th:text="${task.milestoneName}" disabled></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div th:if="${iterStat.index % 2 == 1}" class="w-100 d-none d-md-block"></div>
+      </div>
+      <h3 class="mt-5" th:if="${#lists.isEmpty(taskList)}">태스크가 존재하지 않습니다</h3>
+    </div>
+
+
+  <!-- 등록 모달 -->
+  <!-- 멤버 추가 모달 -->
+  <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModal"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addMemberModalLabel">멤버 추가</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- 등록 폼 내용 -->
+          <form method="post" action="/project/member/add">
+            <div class="form-group">
+              <label for="tagName">프로젝트</label>
+              <input type="text" class="form-control" th:value="${projectInfo.name}" readonly>
+            </div>
+            <input id="projectId" name="projectId" th:value="${projectInfo.id}" hidden>
+            <div class="form-group">
+              <label for="tagName">멤버 이름</label>
+              <input type="text" class="form-control" id="accountId" name="accountId" required>
+            </div>
+            <button type="submit" class="btn btn-success">등록</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 태그 추가 모달 -->
+  <div class="modal fade" id="createTagModal" tabindex="-1" role="dialog" aria-labelledby="createTagModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createTagModalLabel">태그 추가</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- 등록 폼 내용 -->
+          <form method="post" action="/project/tag/create">
+            <div class="form-group">
+              <label for="tagName">태그 이름</label>
+              <input name="projectId" th:value="${projectInfo.id}" hidden>
+              <input type="text" class="form-control" id="tagName" name="name" required>
+            </div>
+            <button type="submit" class="btn btn-success">등록</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 마일스톤 추가 모달 -->
+  <div class="modal fade" id="createMilestoneModal" tabindex="-1" role="dialog" aria-labelledby="createMilestoneModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createMilestoneModalLabel">마일스톤 추가</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- 등록 폼 내용 -->
+          <form method="post" action="/project/milestone/create">
+            <input name="projectId" th:value="${projectInfo.id}" hidden>
+            <div class="form-group">
+              <label for="milestoneName">마일스톤 이름</label>
+              <input type="text" class="form-control" id="milestoneName" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="startDate">시작 날짜</label>
+              <input type="date" class="form-control" id="startDate" name="startDate" required>
+            </div>
+            <div class="form-group">
+              <label for="endDate">종료 날짜</label>
+              <input type="date" class="form-control" id="endDate" name="endDate" required>
+            </div>
+            <button type="submit" class="btn btn-success">등록</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 나머지 코드는 그대로 사용 -->
+
+  <!-- 등록 모달 -->
+  <div class="modal fade" id="createTaskModal" tabindex="-1" role="dialog" aria-labelledby="createTaskModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createTaskModalLabel">태스크 등록</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- 등록 폼 내용 -->
+          <form method="post" action="/project/task/create">
+            <input name="projectId" th:value="${projectInfo.id}" hidden>
+            <div class="form-group">
+              <label for="taskName">태스크 이름</label>
+              <input type="text" class="form-control" id="taskName" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="taskDescription">태스크 내용</label>
+              <textarea class="form-control" id="taskDescription" name="detail" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="tags">태그</label>
+              <select multiple class="form-control" id="tags" name="tagList" th:unless="${#lists.isEmpty(tagList)}">
+                <option th:value="${null}">선택 안함</option>
+                <div th:each="tag : ${tagList}">
+                  <option th:value="${tag.id}" th:text="${tag.name}"></option>
+                </div>
+              </select>
+              <input th:if="${#lists.isEmpty(tagList)}" type="text" class="form-control" value="프로젝트에 태그가 존재하지 않습니다" readonly>
+            </div>
+            <div class="form-group">
+              <label for="milestone">마일스톤</label>
+              <select class="form-control" id="milestone" name="milestoneId" th:unless="${#lists.isEmpty(milestoneList)}">
+                <option th:value="${null}">선택 안함</option>
+                <div th:each="milestone : ${milestoneList}">
+                  <option th:value="${milestone.id}" th:text="${milestone.name}"></option>
+                </div>
+              </select>
+              <input th:if="${#lists.isEmpty(milestoneList)}" type="text" class="form-control" value="프로젝트에 마일스톤이 존재하지 않습니다" readonly>
+            </div>
+            <button type="submit" class="btn btn-success">등록</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
